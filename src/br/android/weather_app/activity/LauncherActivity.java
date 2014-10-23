@@ -21,6 +21,7 @@ import android.os.Handler;
 import android.widget.Toast;
 import br.android.weather_app.R;
 import br.android.weather_app.api.WeatherService;
+import br.android.weather_app.api.model.CurrentCondition;
 import br.android.weather_app.api.model.WeatherResponse;
 import br.android.weather_app.manager.ContentManager;
 import br.android.weather_app.tasks.Notifiable;
@@ -38,7 +39,8 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	// Constants
 	//--------------------------------------------------
 	
-	public static Integer DELAY = 3000;
+	public static final String USER_ALLOW_EXTRA = "user_allow_extra";
+	public static Integer DELAY = 2000;
 	
 	//--------------------------------------------------
 	// Attributes
@@ -54,6 +56,10 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	private Double mLatitude;
 	private Double mLongitude;
 	
+	// Flow.
+	private Boolean mActivityAlreadyAcessed = false;
+	private Boolean mUserAllowGps = false;
+	
 	//--------------------------------------------------
 	// Activity Life Cycle
 	//--------------------------------------------------
@@ -68,9 +74,16 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	protected void onResume() {
 		super.onResume();
 		
+		// Avoid this Activity to be shown every time.
+		if (mActivityAlreadyAcessed) {
+			finish();
+		}
+		
+		// Checks if the GPS is on or not.
 		LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 			// GPS is on.
+			mUserAllowGps = true;
 			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 100, this);
 		} else {
 			// Asks the user to turn on the GPS.
@@ -80,8 +93,7 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// Intent to go to the Settings window.
-						Intent callGpsSettings = new Intent(
-							android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+						Intent callGpsSettings = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 						startActivity(callGpsSettings);
 					}
 				}
@@ -90,6 +102,7 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.cancel();
+					openMainActivity();
 				}
 			});
 			AlertDialog alert = builder.create();
@@ -153,12 +166,21 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	}
 	
 	/**
-	 * Shows the {@link WeatherResponse} info for the user.
+	 * Sets the {@link CurrentCondition} list from the REST API.
 	 * 
 	 * @param response
 	 */
-	public void setWeatherListInCache(WeatherResponse response) {
-		ContentManager.getInstance().setWeatherList(response);
+	public void setCurrentConditionInCache(WeatherResponse response) {
+		ContentManager.getInstance().setCurrentCondition(response);
+	}
+	
+	/**
+	 * Sets the {@link Request} list from the REST API.
+	 * 
+	 * @param response
+	 */
+	public void setRequestListInCache(WeatherResponse response) {
+		ContentManager.getInstance().setRequestList(response);
 		mHandler.postDelayed(mHandlerChecker, DELAY);
 	}
 	
@@ -166,7 +188,10 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	 * Opens the {@link MainActivity}.
 	 */
 	public void openMainActivity() {
-		ActivityUtils.openActivity(this, MainActivity.class);
+		mActivityAlreadyAcessed = true;
+		Bundle extras = new Bundle();
+		extras.putBoolean(USER_ALLOW_EXTRA, mUserAllowGps);
+		ActivityUtils.openActivity(this, MainActivity.class, extras);
 	}
 	
 	//--------------------------------------------------
@@ -177,7 +202,8 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	public void taskFinished(int type, Object result) {
 		if (type == ContentManager.FETCH_TASK.WEATHER) {
 			WeatherResponse response = (WeatherResponse) result;
-			setWeatherListInCache(response);
+			setCurrentConditionInCache(response);
+			setRequestListInCache(response);
 		}
 	}
 	

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.RestAdapter;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,10 +17,13 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import br.android.weather_app.R;
 import br.android.weather_app.api.WeatherService;
+import br.android.weather_app.api.model.CurrentCondition;
 import br.android.weather_app.api.model.Request;
 import br.android.weather_app.api.model.WeatherResponse;
 import br.android.weather_app.data.ListItems;
@@ -30,6 +35,9 @@ import br.android.weather_app.tasks.Notifiable;
 import br.android.weather_app.utils.ActivityUtils;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 /**
  * MainActivity.java class.
@@ -50,6 +58,19 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnClic
 	// Attributes
 	//--------------------------------------------------
 
+	// GPS.
+	private Boolean mUserAllow;
+	
+	// Current Condition.
+	private LinearLayout mBackgroundLinearLayout;
+	private TextView mObservationTimeTextView;
+	private TextView mCurrentDayDescTextView;
+	private ImageView mCurrentWeatherImageView;
+	private TextView mTemperatureTextView;
+	private TextView mPrecipTextView;
+	private TextView mWindDirTextView;
+	private TextView mWindSpeedTextView;
+	
 	// Layout.
 	private Button mAddButton;
 	private Dialog mDialog = null;
@@ -79,6 +100,8 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnClic
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		getExtras();
+		setCurrentDay();
 		setAdapter();
 		setLayout();
 	}
@@ -87,6 +110,106 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnClic
 	// Layout Methods
 	//--------------------------------------------------
 
+	/**
+	 * Sets the {@link CurrentCondition} day
+	 */
+	public void setCurrentDay() {
+		if (mUserAllow) {
+			CurrentCondition current = ContentManager.getInstance().getCurrentCondition();
+			setCurrentConditionLayout();
+			setCurrentConditionData(current);			
+		}
+	}
+	
+	/**
+	 * Sets the {@link CurrentCondition} layout.
+	 */
+	public void setCurrentConditionLayout() {
+		mBackgroundLinearLayout = (LinearLayout)findViewById(R.id.id_current_condition_adapter__linear_layout);
+		mBackgroundLinearLayout.setVisibility(View.VISIBLE);
+		mObservationTimeTextView = (TextView)findViewById(R.id.id_current_condition_adapter__observation_time_text_view);
+		mCurrentDayDescTextView = (TextView)findViewById(R.id.id_current_condition_adapter__current_day_desc_text_view);
+		mCurrentWeatherImageView = (ImageView)findViewById(R.id.id_current_condition_adapter__current_weather_image_view);
+		mTemperatureTextView = (TextView)findViewById(R.id.id_current_condition_adapter__temperature_text_view);
+		mPrecipTextView = (TextView)findViewById(R.id.id_current_condition_adapter__precip_text_view);
+		mWindDirTextView = (TextView)findViewById(R.id.id_current_condition_adapter__wind_dir_text_view);
+		mWindSpeedTextView = (TextView)findViewById(R.id.id_current_condition_adapter__wind_speed_text_view);
+	}
+	
+	/**
+	 * Sets the {@link CurrentCondition} data.
+	 * 
+	 * @param current
+	 */
+	@SuppressLint("NewApi")
+	public void setCurrentConditionData(CurrentCondition current) {
+		// Background linear layout.
+		Drawable color = getTemperatureColor(current.getTemp_C());
+		mBackgroundLinearLayout.setBackground(color);
+		
+		// Observation time.
+		String userCity = ContentManager.getInstance().getCityFromRequest();
+		String text = userCity + ", " + current.getObservation_time();
+		mObservationTimeTextView.setText(text);
+		
+		// Current day description.
+		String currentDayDescription = current.getWeatherDesc().get(0).getValue();
+		mCurrentDayDescTextView.setText(currentDayDescription);
+		
+		// Weather image.
+		setUniversalImage(current.getWeatherIconUrl().get(0).getValue(), mCurrentWeatherImageView);
+		
+		// Temperature.
+		String temperature = current.getTemp_C().toString() + "ºC";
+		mTemperatureTextView.setText(temperature);
+		
+		// Precipitation.
+		String precipitation = current.getPrecipMM().toString() + " mm";
+		mPrecipTextView.setText(precipitation);
+		
+		// Wind Direction and Wind Speed.
+		String windDirection = current.getWinddir16Point();
+		mWindDirTextView.setText(windDirection);
+		
+		String windSpeed = current.getWindspeedKmph().toString() + " km/h";
+		mWindSpeedTextView.setText(windSpeed);
+	}
+	
+	/**
+	 * Gets the {@link Drawable} according to the current temperature. 
+	 * 
+	 * @param instance
+	 * @return
+	 */
+	public Drawable getTemperatureColor(Integer temperature) {
+		Drawable drawable = null;
+		
+		if (temperature <= 0) {
+			drawable = getResources().getDrawable(R.drawable.background_gray);
+		} else if (temperature > 0 && temperature <= 15) {
+			drawable = getResources().getDrawable(R.drawable.background_blue);
+		} else if (temperature > 15 && temperature <= 30) {
+			drawable = getResources().getDrawable(R.drawable.background_yellow);
+		} else {
+			drawable = getResources().getDrawable(R.drawable.background_red);
+		}
+		
+		return drawable;
+	}
+	
+	/**
+	 * Sets the image from each {@link ImageView}.<br>If it exists, get from cache.<br>If isn't, download it.
+	 *  
+	 * @param url The url of the image.
+	 * @param imageView The {@link ImageView} which will receive the image.
+	 */
+	public void setUniversalImage(String url, ImageView imageView) {
+		DisplayImageOptions cache = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisc(true).build();
+		ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.init(ImageLoaderConfiguration.createDefault(this));
+		imageLoader.displayImage(url, imageView, cache);
+	}
+	
 	/**
 	 * Adds values of the list, customizes adapter, and set's list view adapter
 	 * and it's listener.
@@ -170,6 +293,16 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnClic
 	//--------------------------------------------------
 	// Other Methods
 	//--------------------------------------------------
+	
+	/**
+	 * Gets the extras.
+	 */
+	public void getExtras() {
+		Bundle extras = getIntent().getExtras(); 
+		if (extras != null) {
+			mUserAllow = extras.getBoolean(LauncherActivity.USER_ALLOW_EXTRA);
+		}
+	}
 	
 	/**
 	 * Opens the {@link WeatherActivity}.

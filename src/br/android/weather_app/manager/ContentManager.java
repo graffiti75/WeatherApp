@@ -7,9 +7,11 @@ import java.util.Map;
 
 import android.os.AsyncTask;
 import br.android.weather_app.api.WeatherService;
+import br.android.weather_app.api.model.CurrentCondition;
 import br.android.weather_app.api.model.Request;
 import br.android.weather_app.api.model.Weather;
 import br.android.weather_app.api.model.WeatherResponse;
+import br.android.weather_app.model.City;
 import br.android.weather_app.tasks.Notifiable;
 import br.android.weather_app.tasks.WeatherAsyncTask;
 
@@ -44,6 +46,7 @@ public class ContentManager {
 	// Cached values.
 	private WeatherResponse mWeatherResponse = null;
 	private List<Weather> mWeatherList;
+	private CurrentCondition mCurrentCondition;
 	private String mCityFromRequest;
 	
 	// Notifiables map.
@@ -106,6 +109,34 @@ public class ContentManager {
 			mTaskNotifiables.put(task, notifiable);
 		}
 		task.execute();
+	}
+	
+	//----------------------------------------------
+	// Current Condition
+	//----------------------------------------------
+	
+	/**
+	 * Sets the {@link CurrentCondition} list from the REST API.
+	 * 
+	 * @param response
+	 */
+	public void setCurrentCondition(WeatherResponse response) {
+		List<CurrentCondition> currentConditionList = new ArrayList<CurrentCondition>();
+		
+		// Gets the CurrentCondition list.
+		currentConditionList = response.getData().getCurrentCondition();
+		if (currentConditionList != null) {
+			mCurrentCondition = response.getData().getCurrentCondition().get(0);
+		}
+	}
+	
+	/**
+	 * Gets the {@link CurrentCondition}.
+	 * 
+	 * @return
+	 */
+	public CurrentCondition getCurrentCondition() {
+		return mCurrentCondition;
 	}
 	
 	//----------------------------------------------

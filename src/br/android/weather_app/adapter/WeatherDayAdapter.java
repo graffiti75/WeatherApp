@@ -51,15 +51,15 @@ public class WeatherDayAdapter extends BaseAdapter {
 		private TextView mWindSpeedTextView;
 		
 		ViewHolder(View view) {
+			setBackgroundLinearLayout((LinearLayout)view.findViewById(R.id.id_weather_day_adapter__linear_layout));
 			setCurrentDayTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__current_day_text_view));
+			setCurrentDayDescTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__current_day_desc_text_view));
 			setCurrentWeatherImageView((ImageView)view.findViewById(R.id.id_weather_day_adapter__current_weather_image_view));
 			setMinTemperatureTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__min_temperature_text_view));
 			setMaxTemperatureTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__max_temperature_text_view));
 			setPrecipTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__precip_text_view));
 			setWindDirTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__wind_dir_text_view));
 			setWindSpeedTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__wind_speed_text_view));
-			setCurrentDayDescTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__current_day_desc_text_view));
-			setBackgroundLinearLayout((LinearLayout)view.findViewById(R.id.id_weather_day_adapter__linear_layout));
 		}
 		
 		public LinearLayout getBackgroundLinearLayout() {
@@ -249,7 +249,9 @@ public class WeatherDayAdapter extends BaseAdapter {
 		if (adapterDayOfMonth != dayOfMonth) {
 			int difference = adapterDayOfMonth - dayOfMonth;
 			dayOfWeek += difference;
-			dayOfWeek = dayOfWeek % 7;	
+			if (dayOfWeek != 7) {
+				dayOfWeek = dayOfWeek % 7;
+			}
 		}
 		
 		// Gets the proper day of week string.
