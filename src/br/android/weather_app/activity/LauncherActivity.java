@@ -190,9 +190,10 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 			if (addresses.size() > 0)  {
 				city = addresses.get(0).getSubAdminArea();
 			}
-			Toast.makeText(this, "City is " + city + ".", Toast.LENGTH_LONG).show();
-		} catch (IOException e1) {                
-			e1.printStackTrace();
+			String message = getString(R.string.activity_launcher__current_city) + city + ".";
+			Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+		} catch (IOException e) {                
+			e.printStackTrace();
 		}
 		
 		// Calls the API.
@@ -293,7 +294,7 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 
 	@Override
 	public void onProviderEnabled(String provider) {}
-
+	
 	@Override
 	public void onProviderDisabled(String provider) {}
 }

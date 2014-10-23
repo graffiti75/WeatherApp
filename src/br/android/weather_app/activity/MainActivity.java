@@ -9,18 +9,21 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.MotionEvent;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import br.android.weather_app.AppConfiguration;
 import br.android.weather_app.R;
+import br.android.weather_app.adapter.CityAdapter;
 import br.android.weather_app.api.WeatherService;
 import br.android.weather_app.api.WeatherServiceErrorHandler;
 import br.android.weather_app.api.model.CurrentCondition;
@@ -32,13 +35,11 @@ import br.android.weather_app.manager.ContentManager;
 import br.android.weather_app.model.City;
 import br.android.weather_app.tasks.Notifiable;
 import br.android.weather_app.utils.ActivityUtils;
+import br.android.weather_app.utils.LayoutUtils;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 /**
  * MainActivity.java class.
@@ -46,21 +47,24 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
  * @author Rodrigo Cericatto
  * @since 19/10/2014
  */
-public class MainActivity extends SherlockActivity implements Notifiable {
+public class MainActivity extends SherlockActivity implements Notifiable, OnItemClickListener {
 
 	//--------------------------------------------------
 	// Constants
 	//--------------------------------------------------
+	
+	public void __________CONSTANTS__________() {};
 
 	public static final String CITY_NAME_EXTRA = "city_name_extra";
-	public static final Integer LIMIT = 75;
 
 	//--------------------------------------------------
 	// Attributes
 	//--------------------------------------------------
 
+	public void __________ATTRIBUTES__________() {};
+	
 	// GPS.
-	private Boolean mUserAllow;
+	private Boolean mUserAllowGps;
 	
 	// Current Condition.
 	private LinearLayout mBackgroundLinearLayout;
@@ -76,7 +80,7 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 	private Dialog mDialog = null;
 
 	// Rest.
-	private String mCity;
+	private String mCityName;
 	private WeatherService mService;
 	private Boolean mCheckingCity = false;
 
@@ -84,19 +88,16 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 	private List<City> mCityList = new ArrayList<City>();
 	private CityAdapter mAdapter;
 	private ListView mListView;
-	private CityTouchListener mOnTouchListener;
 	private City mNewCity;
+	private Integer mCityId;
 	private Boolean mCityAddedOnDatabase = false;
-
-	// Swipe.
-	private Integer mActionDownX = 0;
-	private Integer mActionUpX = 0;
-	private Integer mDifference = 0;
 
 	//--------------------------------------------------
 	// Activity Life Cycle
 	//--------------------------------------------------
 
+	public void _____ACTIVITY_LIFE_CYCLE_____() {};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -105,11 +106,14 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 		getExtras();
 		setCurrentDay();
 		setAdapter();
+		registerForContextMenu(mListView);
 	}
 	
 	//--------------------------------------------------
 	// Menu
 	//--------------------------------------------------
+	
+	public void __________MENU__________() {};
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -127,15 +131,38 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 		return super.onOptionsItemSelected(item);
 	}
 
+   @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_context_activity_main, menu);
+    }
+    
+	@Override
+    public boolean onContextItemSelected(android.view.MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	    Integer position = info.position;
+		
+        switch (item.getItemId()) {
+            case R.id.id_menu_delete:
+            	removeCityFromDatabase(position);
+                return true;
+            default:
+                return super.onContextItemSelected((android.view.MenuItem) item);
+        }
+    }
+	    
 	//--------------------------------------------------
 	// Layout Methods
 	//--------------------------------------------------
 
+	public void _____LAYOUT_METHODS_____() {};
+	
 	/**
-	 * Sets the {@link CurrentCondition} day
+	 * Sets the {@link CurrentCondition} day.
 	 */
 	public void setCurrentDay() {
-		if (mUserAllow) {
+		if (mUserAllowGps) {
 			CurrentCondition current = ContentManager.getInstance().getCurrentCondition();
 			setCurrentConditionLayout();
 			setCurrentConditionData(current);			
@@ -165,7 +192,7 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 	@SuppressLint("NewApi")
 	public void setCurrentConditionData(CurrentCondition current) {
 		// Background linear layout.
-		Drawable color = getTemperatureColor(current.getTemp_C());
+		Drawable color = LayoutUtils.getTemperatureColor(this, current.getTemp_C());
 		mBackgroundLinearLayout.setBackground(color);
 		
 		// Observation time.
@@ -178,7 +205,8 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 		mCurrentDayDescTextView.setText(currentDayDescription);
 		
 		// Weather image.
-		setUniversalImage(current.getWeatherIconUrl().get(0).getValue(), mCurrentWeatherImageView);
+		String weatherIconUrl = current.getWeatherIconUrl().get(0).getValue();
+		LayoutUtils.setUniversalImage(this, weatherIconUrl, mCurrentWeatherImageView);
 		
 		// Temperature.
 		String temperature = current.getTemp_C().toString() + "ºC";
@@ -188,47 +216,13 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 		String precipitation = current.getPrecipMM().toString() + " mm";
 		mPrecipTextView.setText(precipitation);
 		
-		// Wind Direction and Wind Speed.
+		// Wind Direction.
 		String windDirection = current.getWinddir16Point();
 		mWindDirTextView.setText(windDirection);
-		
+
+		// Wind Speed.
 		String windSpeed = current.getWindspeedKmph().toString() + " km/h";
 		mWindSpeedTextView.setText(windSpeed);
-	}
-	
-	/**
-	 * Gets the {@link Drawable} according to the current temperature. 
-	 * 
-	 * @param instance
-	 * @return
-	 */
-	public Drawable getTemperatureColor(Integer temperature) {
-		Drawable drawable = null;
-		
-		if (temperature <= 0) {
-			drawable = getResources().getDrawable(R.drawable.background_gray);
-		} else if (temperature > 0 && temperature <= 15) {
-			drawable = getResources().getDrawable(R.drawable.background_blue);
-		} else if (temperature > 15 && temperature <= 30) {
-			drawable = getResources().getDrawable(R.drawable.background_yellow);
-		} else {
-			drawable = getResources().getDrawable(R.drawable.background_red);
-		}
-		
-		return drawable;
-	}
-	
-	/**
-	 * Sets the image from each {@link ImageView}.<br>If it exists, get from cache.<br>If isn't, download it.
-	 *  
-	 * @param url The url of the image.
-	 * @param imageView The {@link ImageView} which will receive the image.
-	 */
-	public void setUniversalImage(String url, ImageView imageView) {
-		DisplayImageOptions cache = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisc(true).build();
-		ImageLoader imageLoader = ImageLoader.getInstance();
-		imageLoader.init(ImageLoaderConfiguration.createDefault(this));
-		imageLoader.displayImage(url, imageView, cache);
 	}
 	
 	/**
@@ -236,16 +230,18 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 	 * and it's listener.
 	 */
 	public void setAdapter() {
-		mOnTouchListener = new CityTouchListener();
 		mCityList = ContentManager.getInstance().getCachedCityList();
 		mListView = (ListView) findViewById(R.id.id_activity_main__listview);
 		mAdapter = new CityAdapter(this, mCityList);
 		mListView.setAdapter(mAdapter);
+		mListView.setOnItemClickListener(this);
 	}
 
 	//--------------------------------------------------
 	// API Methods
 	//--------------------------------------------------
+	
+	public void _____API_METHODS_____() {};
 	
 	/**
 	 * Sets the {@link WeatherService} from the Retrofit.
@@ -264,7 +260,7 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 	 */
 	public void getWeatherInfo() {
 		setRetrofitService();
-		ContentManager.getInstance().getWeatherResponse(this, mService, mCity);
+		ContentManager.getInstance().getWeatherResponse(this, mService, mCityName);
 	}
 
 	/**
@@ -303,19 +299,41 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 		}
 		mCheckingCity = false;
 	}
+	
+	/**
+	 * Gets the {@link City} info from the Api.
+	 * 
+	 * @param city
+	 */
+	public void getCityInfoFromApi(String cityName) {
+		// Shows a dialog for the user.
+		mCityName = cityName;
+		String message = getString(R.string.activity_main__loading_data) +
+			" " + mCityName + "..."; 
+		mDialog = DialogHelper.showProgressDialog(MainActivity.this, message);
+		
+		// Calls the API to check if the city exists.
+		mCheckingCity = true;
+		setRetrofitService();
+		ContentManager.getInstance().getWeatherResponse(this, mService, cityName);
+	}
 
 	//--------------------------------------------------
 	// Insert or Remove Methods
 	//--------------------------------------------------
+	
+	public void _____INSERT_REMOVE_METHODS_____() {};
 	
 	/**
 	 * Adds the {@link City} into the database. 
 	 */
 	public void addCityInDatabase() {
 		// Creates a new city.
-		Integer index = mCityList.size() + 1;
+		Integer listSize = mCityList.size();
+		City lastElement = mCityList.get(listSize - 1);
+		Integer index = lastElement.getId() + 1;
 		String city = ContentManager.getInstance().getCityFromRequest();
-		mNewCity = new City(index, city, true);
+		mNewCity = new City(index, city);
 		
 		// Adds the city into the database.
 		List<City> list = new ArrayList<City>();
@@ -327,15 +345,41 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 	 * Adds the {@link City} into the adapter.
 	 */
 	public void addCityIntoAdapter() {
+		Log.i(AppConfiguration.COMMON_LOGGING_TAG,
+			"[MainActivity].addCityIntoAdapter() -> Adding city " + mNewCity.toString());
 		if (mCityAddedOnDatabase) {
 			mCityList.add(mNewCity);
 			mAdapter.notifyDataSetChanged();
 		}
 	}
 	
+	/**
+	 * Removes the {@link City} from the database.
+	 * 
+	 * @param position
+	 */
+	public void removeCityFromDatabase(Integer position) {
+		City city = mCityList.get(position);
+		mCityId = city.getId();
+		ContentManager.getInstance().removeCity(this, MainActivity.this, city);
+	}
+	
+	/**
+	 * Updates the {@link City} list adapter.
+	 * 
+	 * @param result
+	 */
+	public void updateCityAdapter(Object result) {
+		mCityList.clear();
+		mCityList.addAll((List<City>)result);
+		mAdapter.notifyDataSetChanged();
+	}
+	
 	//--------------------------------------------------
 	// Other Methods
 	//--------------------------------------------------
+	
+	public void _____OTHER_METHODS_____() {};
 	
 	/**
 	 * Gets the extras.
@@ -343,8 +387,40 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 	public void getExtras() {
 		Bundle extras = getIntent().getExtras(); 
 		if (extras != null) {
-			mUserAllow = extras.getBoolean(LauncherActivity.USER_ALLOW_EXTRA);
+			mUserAllowGps = extras.getBoolean(LauncherActivity.USER_ALLOW_EXTRA);
 		}
+	}
+	
+	/**
+	 * Gets the city position into the list.
+	 * 
+	 * @return
+	 */
+	public Integer getCityPositionFromId() {
+		Integer position = 0;
+		City city = null;
+		for (int i = 0; i < mCityList.size(); i++) {
+			city = mCityList.get(i);
+			if (city.getId() == mCityId) {
+				position = i;
+			}
+		}
+		return position;
+	}
+	
+	/**
+	 * Call the {@link Dialog} to adda {@link City} to the adapter.
+	 */
+	public void getCityDialog() {
+		// Gets the city from the dialog.
+		DialogHelper.showCustomDialog(this, R.layout.custom_dialog, R.string.activity_main__city_dialog_title,
+			new OnClickListenerCustomDialog() {
+				@Override
+				public void onClickCallback(Context context, String city) {
+					getCityInfoFromApi(city);
+				}
+			}
+		);
 	}
 	
 	/**
@@ -363,215 +439,69 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 		ActivityUtils.openActivity(this, WeatherActivity.class, extras);
 		overridePendingTransition(R.anim.slide_up_from_outside, R.anim.slide_up_to_outside);
 	}
-
-	/**
-	 * Calculates the difference between the clicked position in X axis.
-	 * 
-	 * @param holder
-	 * @param position
-	 */
-	public void calculateDifference(final ViewHolder holder, final int position) {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if (mDifference > LIMIT) {
-					holder.removeButton.setVisibility(View.VISIBLE);
-					mCityList.get(position).setVisible(true);
-					mAdapter.changeData(mCityList);
-				} else if (mDifference < -LIMIT) {
-					holder.removeButton.setVisibility(View.GONE);
-					mCityList.get(position).setVisible(false);
-					mAdapter.changeData(mCityList);
-				} else {
-					mCity = mCityList.get(position).getCity();
-					String message = getString(R.string.activity_main__loading_data) +
-						" " + mCity + "..."; 
-					mDialog = DialogHelper.showProgressDialog(MainActivity.this, message);
-					getWeatherInfo();
-				}
-			}
-		});
-	}
 	
-	/**
-	 * Call the {@link Dialog} to adda {@link City} to the adapter.
-	 */
-	public void getCityDialog() {
-		// Gets the city from the dialog.
-		DialogHelper.showCustomDialog(this, R.layout.custom_dialog, R.string.activity_main__city_dialog_title,
-			new OnClickListenerCustomDialog() {
-				@Override
-				public void onClickCallback(Context context, String city) {
-					// Shows a dialog for the user.
-					mCity = city;
-					String message = getString(R.string.activity_main__loading_data) +
-						" " + mCity + "..."; 
-					mDialog = DialogHelper.showProgressDialog(MainActivity.this, message);
-					
-					// Calls the API to check if the city exists.
-					mCheckingCity = true;
-					setRetrofitService();
-					ContentManager.getInstance().getWeatherResponse(MainActivity.this, mService, city);
-				}
-			}
-		);
+	//--------------------------------------------------
+	// Listener
+	//--------------------------------------------------
+	
+	public void __________LISTENER__________() {};
+	
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		mCityName = mCityList.get(position).getCity();
+		String message = getString(R.string.activity_main__loading_data) +
+			" " + mCityName + "..."; 
+		mDialog = DialogHelper.showProgressDialog(MainActivity.this, message);
+		getWeatherInfo();
 	}
 	
 	//--------------------------------------------------
 	// Notifiable
 	//--------------------------------------------------
 
-	@Override
-	public void taskFinished(int type, Object result) {
-		if (type == ContentManager.FETCH_TASK.WEATHER) {
-			WeatherResponse response = (WeatherResponse) result;
-			if (mCheckingCity) {
-				setRequestListInCache(response);
-			} else {
-				setWeatherListInCache(response);
-			}
-		} else if (type == ContentManager.FETCH_TASK.CITY_ADD) {
-			mCityAddedOnDatabase = (Boolean)result;
-			addCityIntoAdapter();
+	public void __________NOTIFIABLE__________() {};
+	
+	/**
+	 * Do the actions for the return of the task called into {@link ContentManager}.
+	 * 
+	 * @param result
+	 */
+	public void weatherTask(Object result) {
+		WeatherResponse response = (WeatherResponse)result;
+		if (mCheckingCity) {
+			setRequestListInCache(response);
+		} else {
+			setWeatherListInCache(response);
 		}
 	}
 	
-	//--------------------------------------------------
-	// Listener
-	//--------------------------------------------------
-
 	/**
-	 * CityTouchListener.java class.
-	 * This class is used to link the Swipe action of the Adapter with
-	 * the UiThread, that in this case is the MainActivity. 
+	 * Do the actions for the return of the task called into {@link ContentManager}.
+	 * 
+	 * @param result
 	 */
-	public class CityTouchListener implements OnTouchListener {
-		@Override
-		public boolean onTouch(View view, MotionEvent event) {
-			ViewHolder holder = (ViewHolder) view.getTag(R.layout.city_adapter);
-			int action = event.getAction();
-			int position = (Integer) view.getTag();
-
-			switch (action) {
-			case MotionEvent.ACTION_DOWN:
-				mActionDownX = (int) event.getX();
-				break;
-			case MotionEvent.ACTION_MOVE:
-				mActionUpX = (int) event.getX();
-				mDifference = mActionDownX - mActionUpX;
-				break;
-			case MotionEvent.ACTION_UP:
-				calculateDifference(holder, position);
-				mActionDownX = 0;
-				mActionUpX = 0;
-				mDifference = 0;
-				break;
-			}
-			return true;
+	public void removeTask(Object result) {
+		Boolean cityRemovedFromDatabase = (Boolean)result;
+		// Gets the city from the database.
+		if (cityRemovedFromDatabase) {
+			ContentManager.getInstance().getCityList(this, MainActivity.this);
 		}
 	}
-
-	//--------------------------------------------------
-	// View Holder
-	//--------------------------------------------------
-
-	public class ViewHolder {
-		private TextView cityTextView;
-		private Button removeButton;
-	}
-
-	//--------------------------------------------------
-	// City Adapter
-	//--------------------------------------------------
-
-	public class CityAdapter extends BaseAdapter implements OnClickListener {
-
-		//------------ Attributes ------------
-		
-		private Context mContext;
-		private List<City> mAdapterCityList;
-
-		//------------ Constructor ------------
-		
-		public CityAdapter(Context context, List<City> data) {
-			mContext = context;
-			mAdapterCityList = data;
-		}
-
-		//------------ Adapter ------------
-		
-		@Override
-		public int getCount() {
-			return mAdapterCityList.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return mAdapterCityList.get(position);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			ViewHolder holder = new ViewHolder();
-			if (convertView == null) {
-				convertView = getLayoutInflater().inflate(R.layout.city_adapter, null);
-				holder.cityTextView = (TextView) convertView.findViewById(R.id.id_city_adapter__city_name_text_view);
-				holder.removeButton = (Button) convertView.findViewById(R.id.id_city_adapter__remove_button);
-				holder.removeButton.setOnClickListener(this);
-				convertView.setTag(R.layout.city_adapter, holder);
-			} else {
-				holder = (ViewHolder) convertView.getTag(R.layout.city_adapter);
+	
+	@Override
+	public void taskFinished(int type, Object result) {
+		// Checks if is null.
+		if (result != null) {
+			if (type == ContentManager.FETCH_TASK.WEATHER) {
+				weatherTask(result);
+			} else if (type == ContentManager.FETCH_TASK.CITY_LIST) {
+				updateCityAdapter(result);
+			} else if (type == ContentManager.FETCH_TASK.CITY_ADD) {
+				mCityAddedOnDatabase = (Boolean)result;
+				addCityIntoAdapter();
+			} else if (type == ContentManager.FETCH_TASK.CITY_REMOVE) {
+				removeTask(result);
 			}
-			setAdapter(holder, convertView, position);
-
-			return convertView;
-		}
-
-		//------------ Methods ------------
-
-		/**
-		 * Sets the adapter.
-		 * 
-		 * @param holder
-		 * @param convertView
-		 * @param position
-		 */
-		public void setAdapter(ViewHolder holder, View convertView, Integer position) {
-			convertView.setTag(position);
-			convertView.setOnTouchListener(mOnTouchListener);
-			holder.removeButton.setTag(position);
-			holder.cityTextView.setText(mCityList.get(position).getCity());
-		}
-
-		/**
-		 * Changes the data of the adapter.
-		 * 
-		 * @param data
-		 */
-		public void changeData(List<City> data) {
-			mAdapterCityList = data;
-			notifyDataSetChanged();
-		}
-
-		//------------ Listeners ------------
-		
-		@Override
-		public void onClick(View view) {
-			final int position = (Integer) view.getTag();
-			
-			// Removes from the database.
-			ContentManager.getInstance().removeCity(mContext, mCityList.get(position));
-			
-			// Removes from the adapter.
-			mCityList.get(position).setVisible(false);
-			mCityList.remove(position);
-			view.setVisibility(View.GONE);
-			changeData(mCityList);
 		}
 	}
 }

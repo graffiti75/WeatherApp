@@ -32,8 +32,6 @@ public class CustomApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		// Initializing the content manager.
-		ContentManager.getInstance().setContext(this);
 		// Setting the database helper class.
 		OpenHelperManager.setOpenHelperClass(DatabaseHelper.class);
 	}

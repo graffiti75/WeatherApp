@@ -4,6 +4,8 @@ import java.util.List;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+import br.android.weather_app.AppConfiguration;
 import br.android.weather_app.helper.QueryHelper;
 import br.android.weather_app.manager.ContentManager;
 import br.android.weather_app.model.City;
@@ -65,6 +67,8 @@ public class AddCityAsyncTask extends AsyncTask<Void, Integer, Boolean> {
 	 * @return
 	 */
 	public static Boolean insert() {
+		Log.i(AppConfiguration.COMMON_LOGGING_TAG,
+			"[AddCityAsyncTask].insert() -> Adding city: " + mCityList.get(0).toString());
 		Boolean success = QueryHelper.persistCity(mContext, mCityList);
 		return success;
 	}

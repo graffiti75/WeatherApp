@@ -22,19 +22,16 @@ public class City extends Entity  {
 	@DatabaseField
 	private String city;
 	
-	private Boolean isVisible;
-	
 	//--------------------------------------------------
 	// Constructor
 	//--------------------------------------------------
 	
 	public City() {}
 	
-	public City(Integer id, String city, Boolean isVisible) {
+	public City(Integer id, String city) {
 		super();
 		this.id = id;
 		this.city = city;
-		this.isVisible = isVisible;
 	}
 	
 	//--------------------------------------------------
@@ -43,7 +40,7 @@ public class City extends Entity  {
 	
 	@Override
 	public String toString() {
-		return "City [city=" + city + ", isVisible=" + isVisible + "]";
+		return "City [id=" + id + ", city=" + city + "]";
 	}
 
 	//--------------------------------------------------
@@ -64,12 +61,5 @@ public class City extends Entity  {
 	}
 	public void setCity(String city) {
 		this.city = city;
-	}
-	
-	public Boolean isVisible() {
-		return isVisible;
-	}
-	public void setVisible(Boolean isVisible) {
-		this.isVisible = isVisible;
 	}
 }

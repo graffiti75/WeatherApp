@@ -2,6 +2,8 @@ package br.android.weather_app.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+import br.android.weather_app.AppConfiguration;
 import br.android.weather_app.helper.QueryHelper;
 import br.android.weather_app.manager.ContentManager;
 import br.android.weather_app.model.City;
@@ -63,6 +65,8 @@ public class RemoveCityAsyncTask extends AsyncTask<Void, Integer, Boolean> {
 	 * @return
 	 */
 	public static Boolean remove() {
+		Log.i(AppConfiguration.COMMON_LOGGING_TAG,
+			"[RemoveCityAsyncTask].remove() -> Removing city: " + mCity.toString());
 		Boolean success = QueryHelper.removeCity(mContext, mCity);
 		return success;
 	}

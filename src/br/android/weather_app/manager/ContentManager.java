@@ -7,6 +7,8 @@ import java.util.Map;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+import br.android.weather_app.AppConfiguration;
 import br.android.weather_app.api.WeatherService;
 import br.android.weather_app.api.model.CurrentCondition;
 import br.android.weather_app.api.model.Request;
@@ -38,6 +40,7 @@ public class ContentManager {
 		public static final int WEATHER = 2;
 		public static final int CITY_LIST = 3;
 		public static final int CITY_ADD = 4;
+		public static final int CITY_REMOVE = 5;
 	}
 	
 	//----------------------------------------------
@@ -51,12 +54,11 @@ public class ContentManager {
 	// Attributes
 	//----------------------------------------------
 
-	// The application context.
-	private Context mContext;
-	
 	// Cached values.
 	private Boolean mDatabaseNeedsUpdate = false;
-	private Boolean mDatabaseAccessSucceeded = false;
+	private Boolean mCityAddedOk = false;
+	private Boolean mCityRemovedOk = false;
+	
 	private List<City> mCityList;
 	private WeatherResponse mWeatherResponse = null;
 	private List<Weather> mWeatherList;
@@ -90,20 +92,14 @@ public class ContentManager {
 	//----------------------------------------------
 	
 	/**
-	 * Sets the application context.
-	 * 
-	 * @param context The context to be used.
-	 */
-	public void setContext(Context context) {
-		mContext = context;
-	}
-	
-	/**
 	 * Cleans all cached content.
 	 */
 	public void clean() {
-		// Cleaning all cached contents.
+		mCityList = null;
 		mWeatherResponse = null;
+		mWeatherList = null;
+		mCurrentCondition = null;
+		mCityFromRequest = null;
 	}
 	
 	//----------------------------------------------
@@ -158,8 +154,18 @@ public class ContentManager {
 		task.execute();
 	}
 	
+	/**
+	 * Prints the {@link City} list.
+	 */
+	public void printCityList() {
+		Log.i(AppConfiguration.COMMON_LOGGING_TAG, "Printing the city list read from the database.");
+		for (City city : mCityList) {
+			Log.i(AppConfiguration.COMMON_LOGGING_TAG, city.toString());
+		}
+	}
+	
 	//----------------------------------------------
-	// Add and Remove City
+	// Add City
 	//----------------------------------------------
 	
 	/**
@@ -167,8 +173,8 @@ public class ContentManager {
 	 * 
 	 * @return
 	 */
-	public Boolean getDatabaseAccessStatus() {
-		return mDatabaseAccessSucceeded;
+	public Boolean getCityAddedStatus() {
+		return mCityAddedOk;
 	}
 	
 	/**
@@ -186,14 +192,31 @@ public class ContentManager {
 		task.execute();
 	}
 	
+	//----------------------------------------------
+	// Remove City
+	//----------------------------------------------
+	
+	/**
+	 * Gets the database access status.
+	 * 
+	 * @return
+	 */
+	public Boolean getCityRemovedStatus() {
+		return mCityRemovedOk;
+	}
+	
 	/**
 	 * Removes a {@link City} from the database.
 	 * 
+	 * @param notifiable The notifiable object to be called.
 	 * @param context
 	 * @param city
 	 */
-	public void removeCity(Context context, City city) {
+	public void removeCity(Notifiable notifiable, Context context, City city) {
 		RemoveCityAsyncTask task = new RemoveCityAsyncTask(context, city);
+		if (notifiable != null) {
+			mTaskNotifiables.put(task, notifiable);
+		}
 		task.execute();
 	}
 	
@@ -348,9 +371,13 @@ public class ContentManager {
 		} else if (FETCH_TASK.CITY_LIST == taskType) {
 			// Puts the database data in the cache.
 			mCityList = (List<City>)result;
+			printCityList();
 		} else if (FETCH_TASK.CITY_ADD == taskType) {
 			// Gets the database return.
-			mDatabaseAccessSucceeded = (Boolean)result;
+			mCityAddedOk = (Boolean)result;
+		} else if (FETCH_TASK.CITY_REMOVE == taskType) {
+			// Gets the database return.
+			mCityRemovedOk = (Boolean)result;
 		}
 		
 		// Removes performed task.
@@ -376,6 +403,8 @@ public class ContentManager {
 			return FETCH_TASK.CITY_LIST;
 		} else if (task instanceof AddCityAsyncTask) {
 			return FETCH_TASK.CITY_ADD;
+		} else if (task instanceof RemoveCityAsyncTask) {
+			return FETCH_TASK.CITY_REMOVE;
 		}
 		return -1;
 	}

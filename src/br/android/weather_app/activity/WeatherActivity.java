@@ -75,14 +75,7 @@ public class WeatherActivity extends SherlockActivity implements Notifiable {
 				onBackPressed();
 				return true;
 			case R.id.id_menu_refresh:
-				// Shows a dialog for the user.
-				String message = getString(R.string.activity_weather__loading_data) +
-					" " + mCityName + "..."; 
-				mDialog = DialogHelper.showProgressDialog(this, message);
-				
-				// Calls the API.
-				setRetrofitService();
-				ContentManager.getInstance().getWeatherResponse(this, mService, mCityName);
+				refreshList();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -151,6 +144,20 @@ public class WeatherActivity extends SherlockActivity implements Notifiable {
 			mDialog.cancel();
 		}
 		setAdapter();
+	}
+	
+	/**
+	 * Refreshes the {@link Weather} list.
+	 */
+	public void refreshList() {
+		// Shows a dialog for the user.
+		String message = getString(R.string.activity_weather__loading_data) +
+			" " + mCityName + "..."; 
+		mDialog = DialogHelper.showProgressDialog(this, message);
+		
+		// Calls the API.
+		setRetrofitService();
+		ContentManager.getInstance().getWeatherResponse(this, mService, mCityName);
 	}
 	
 	//--------------------------------------------------
