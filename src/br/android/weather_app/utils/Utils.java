@@ -4,6 +4,8 @@ import java.util.Calendar;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 /**
  * A group of utility methods.
@@ -23,17 +25,14 @@ public class Utils {
 	 * @param context
 	 * @return
 	 */
-	/*
 	public static Boolean checkConnection(Context context) {
-		// Checking for internet connection.
-		if (!HttpManager.getInstance().isOnline()) {
-			// Alert the user that a connection is needed.
-			DialogHelper.showSimpleAlert(context, R.string.error_title_no_internet, R.string.error_msg_no_internet);
-			return false;
+		ConnectivityManager manager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+		if (networkInfo != null && networkInfo.isConnected()) {
+			return true;
 		}
-		return true;
+		return false; 
 	}
-	*/
 	
 	/**
 	 * Gets the current time in mili seconds.

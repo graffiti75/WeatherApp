@@ -1,6 +1,7 @@
 package br.android.weather_app;
 
 /**
+ * AppConfiguration.java class.
  * Stores the application configuration params.
  * 
  * @author Rodrigo Cericatto
@@ -12,18 +13,15 @@ public class AppConfiguration {
 	// General Constants
 	//----------------------------------------------	
 	
-	// The API url to call the weather informations.
-	public static final String API_URL = "http://api.worldweatheronline.com/free/v1";
+	// The data format of the data from the API.
+	public static final String FORMAT = "json";
 
-	// The service url to get the weather informations.
-	public static final String SERVICE_URL = "/weather.ashx?q=London&format=json&num_of_days=5&key=";
+	// The number of days to get the forecast.
+	public static final String NUMBER_OF_DAYS = "5";
 	
 	// The Token of the World WeatherResponse Online API.
-	public static final String TOKEN = "714be4de03b4ab70767d3335a6fa1651015c022f";
+	public static final String KEY = "714be4de03b4ab70767d3335a6fa1651015c022f";
 	
-	// Controls the flow of the LauncherActivity.
-	public static final String ACTIVITY_ACESSED_EXTRA = "activity_acessed_extra";
-
 	//----------------------------------------------
 	// Database Settings
 	//----------------------------------------------
@@ -33,9 +31,6 @@ public class AppConfiguration {
 	
 	// The name of the database file.
 	public static final String DATABASE_NAME = "weather_app.db";
-	
-	// Flag to get data from server or from database.
-	public static Boolean sDatabaseNeedsUpdate = false;
 	
 	//----------------------------------------------
 	// Logging

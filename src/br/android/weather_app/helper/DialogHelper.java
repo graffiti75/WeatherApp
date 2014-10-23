@@ -25,21 +25,6 @@ public class DialogHelper {
 	//--------------------------------------------------
 	
 	/**
-	 * Creates a list dialog.
-	 * 
-	 * @param context The context to show the dialog.
-	 * @param items The list of items.
-	 * @param title The title text.
-	 * @param listener The click listener.
-	 */
-	public static void showListDialog(Context context, CharSequence[] items, CharSequence title, OnClickListener listener) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(title);
-		builder.setItems(items, listener);
-		builder.show();
-	}
-
-	/**
 	 * Create simple progress dialog with the given message resource.
 	 * 
 	 * @param context
@@ -119,7 +104,7 @@ public class DialogHelper {
 	 * @param context
 	 * @param titleResource
 	 * @param messageResource
-	 * @param listener
+	 * @param mListener
 	 */
 	public static void showSimpleAlert(Context context, int titleResource, int messageResource, OnClickListener listener) {
 		String dialogTitle = titleResource > 0 ? context.getString(titleResource) : null;
@@ -133,7 +118,7 @@ public class DialogHelper {
 	 * @param context
 	 * @param title
 	 * @param message
-	 * @param listener
+	 * @param mListener
 	 */
 	public static void showSimpleAlert(Context context, String title, String message, OnClickListener listener) {
 		if (context instanceof Activity && ((Activity)context).isFinishing()) {

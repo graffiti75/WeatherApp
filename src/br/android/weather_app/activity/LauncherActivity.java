@@ -21,14 +21,15 @@ import android.os.Handler;
 import android.widget.Toast;
 import br.android.weather_app.R;
 import br.android.weather_app.api.WeatherService;
-import br.android.weather_app.api.WeatherServiceErrorHandler;
 import br.android.weather_app.api.model.CurrentCondition;
 import br.android.weather_app.api.model.Request;
 import br.android.weather_app.api.model.WeatherResponse;
+import br.android.weather_app.helper.DialogHelper;
 import br.android.weather_app.manager.ContentManager;
 import br.android.weather_app.model.City;
 import br.android.weather_app.tasks.Notifiable;
 import br.android.weather_app.utils.ActivityUtils;
+import br.android.weather_app.utils.Utils;
 
 /**
  * MainActivity.java class.
@@ -43,6 +44,8 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	//--------------------------------------------------
 	
 	public static Integer DELAY = 2000;
+	public static Integer MIN_TIME_GPS = 30000;
+	public static Integer MIN_DISTANCE_GPS = 100;
 	
 	//--------------------------------------------------
 	// Attributes
@@ -111,7 +114,6 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	public void setRetrofitService() {
 		RestAdapter restAdapter = new RestAdapter.Builder()
 			.setEndpoint("http://api.worldweatheronline.com")
-			.setErrorHandler(new WeatherServiceErrorHandler())
 			.build();
 
 		mService = restAdapter.create(WeatherService.class);
@@ -146,32 +148,59 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	public void checkGps() {
 		LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-			// GPS is on.
-			mUserAllowGps = true;
-			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 100, this);
+			// Check if there is Network connection.
+			if (Utils.checkConnection(this)) {
+				// GPS is on.
+				mUserAllowGps = true;
+				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_GPS, MIN_DISTANCE_GPS, this);
+			} else {
+				showNoConnectionDialog();
+			}
 		} else {
-			// Asks the user to turn on the GPS.
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("The GPS is off. Do you want to turn it now?").setCancelable(false);
-			builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// Intent to go to the Settings window.
-						Intent callGpsSettings = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-						startActivity(callGpsSettings);
-					}
-				}
-			);
-			builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			callGpsSettings();
+		}
+	}
+	
+	/**
+	 * Shows a error message for the user if we don't have Network connection.<br>
+	 * Also, reads the {@link City} list into the {@link Handler} checker below.
+	 */
+	public void showNoConnectionDialog() {
+		DialogHelper.showSimpleAlert(this, R.string.network_error_dialog_title,
+			R.string.network_error_dialog_message, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.cancel();
 					mMainActivityHandler.postDelayed(mMainActivityHandlerChecker, DELAY);
 				}
-			});
-			AlertDialog alert = builder.create();
-			alert.show();
-		}
+			}
+		);
+	}
+	
+	/**
+	 * Asks the user to turn on the GPS.
+	 */
+	public void callGpsSettings() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("The GPS is off. Do you want to turn it now?").setCancelable(false);
+		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// Intent to go to the Settings window.
+					Intent callGpsSettings = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+					startActivity(callGpsSettings);
+				}
+			}
+		);
+		builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+				mMainActivityHandler.postDelayed(mMainActivityHandlerChecker, DELAY);
+			}
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
 	}
 	
 	/**

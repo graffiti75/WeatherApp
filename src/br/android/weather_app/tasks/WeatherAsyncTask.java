@@ -1,6 +1,7 @@
 package br.android.weather_app.tasks;
 
 import android.os.AsyncTask;
+import br.android.weather_app.AppConfiguration;
 import br.android.weather_app.api.WeatherService;
 import br.android.weather_app.api.model.WeatherResponse;
 import br.android.weather_app.manager.ContentManager;
@@ -41,11 +42,11 @@ public class WeatherAsyncTask extends AsyncTask<Void, Integer, WeatherResponse> 
 	
 	@Override
 	protected WeatherResponse doInBackground(Void... params) {
-		WeatherResponse repos = mService.getWeather(mCity, "json", "5", "714be4de03b4ab70767d3335a6fa1651015c022f");
-		return repos;
+		WeatherResponse response = mService.getWeather(mCity, AppConfiguration.FORMAT, AppConfiguration.NUMBER_OF_DAYS, AppConfiguration.KEY);
+		return response;
 	}
 	
 	protected void onPostExecute(WeatherResponse result) {
 		ContentManager.getInstance().taskFinished(this, result);
-	};
+	}
 }

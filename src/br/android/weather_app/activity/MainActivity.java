@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,7 +27,6 @@ import br.android.weather_app.AppConfiguration;
 import br.android.weather_app.R;
 import br.android.weather_app.adapter.CityAdapter;
 import br.android.weather_app.api.WeatherService;
-import br.android.weather_app.api.WeatherServiceErrorHandler;
 import br.android.weather_app.api.model.CurrentCondition;
 import br.android.weather_app.api.model.Request;
 import br.android.weather_app.api.model.WeatherResponse;
@@ -37,6 +37,7 @@ import br.android.weather_app.model.City;
 import br.android.weather_app.tasks.Notifiable;
 import br.android.weather_app.utils.ActivityUtils;
 import br.android.weather_app.utils.LayoutUtils;
+import br.android.weather_app.utils.Utils;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -54,16 +55,12 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 	// Constants
 	//--------------------------------------------------
 	
-	public void __________CONSTANTS__________() {};
-
 	public static final String CITY_NAME_EXTRA = "city_name_extra";
 
 	//--------------------------------------------------
 	// Attributes
 	//--------------------------------------------------
 
-	public void __________ATTRIBUTES__________() {};
-	
 	// Current Condition.
 	private LinearLayout mBackgroundLinearLayout;
 	private TextView mObservationTimeTextView;
@@ -94,8 +91,6 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 	// Activity Life Cycle
 	//--------------------------------------------------
 
-	public void _____ACTIVITY_LIFE_CYCLE_____() {};
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,8 +104,6 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 	//--------------------------------------------------
 	// Menu
 	//--------------------------------------------------
-	
-	public void __________MENU__________() {};
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,8 +146,6 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 	// Layout Methods
 	//--------------------------------------------------
 
-	public void _____LAYOUT_METHODS_____() {};
-	
 	/**
 	 * Sets the {@link CurrentCondition} day.
 	 */
@@ -223,9 +214,13 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 		mWindSpeedTextView.setText(windSpeed);
 	}
 	
+	//--------------------------------------------------
+	// Adapter Methods
+	//--------------------------------------------------
+	
 	/**
 	 * Adds values of the list, customizes adapter, and set's list view adapter
-	 * and it's listener.
+	 * and it's mListener.
 	 */
 	public void setAdapter() {
 		mCityList = ContentManager.getInstance().getCachedCityList();
@@ -234,12 +229,48 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(this);
 	}
+	
+	/**
+	 * Checks if the city typed by the user is already into the adatper.
+	 * 
+	 * @param cityName
+	 * 
+	 * @return
+	 */
+	@SuppressLint("DefaultLocale")
+	public Boolean cityAlreadyInAdapter(String cityName) {
+		Boolean isInside = false;
+		String cityNameLowerCase = cityName.toLowerCase();
+		
+		for (City city : mCityList) {
+			String currentCityName = city.getCity().toLowerCase();
+			if (currentCityName.contains(cityNameLowerCase)) {
+				isInside = true;
+			}
+		}
+		return isInside;
+	}
+	
+	/**
+	 * Gets the city position into the list.
+	 * 
+	 * @return
+	 */
+	public Integer getCityPositionFromId() {
+		Integer position = 0;
+		City city = null;
+		for (int i = 0; i < mCityList.size(); i++) {
+			city = mCityList.get(i);
+			if (city.getId() == mCityId) {
+				position = i;
+			}
+		}
+		return position;
+	}
 
 	//--------------------------------------------------
 	// API Methods
 	//--------------------------------------------------
-	
-	public void _____API_METHODS_____() {};
 	
 	/**
 	 * Sets the {@link WeatherService} from the Retrofit.
@@ -247,7 +278,6 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 	public void setRetrofitService() {
 		RestAdapter restAdapter = new RestAdapter.Builder()
 			.setEndpoint("http://api.worldweatheronline.com")
-			.setErrorHandler(new WeatherServiceErrorHandler())
 			.build();
 
 		mService = restAdapter.create(WeatherService.class);
@@ -324,12 +354,24 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 		setRetrofitService();
 		ContentManager.getInstance().getWeatherResponse(this, mService, cityName);
 	}
+	
+	/**
+	 * Shows a error message for the user if we don't have Network connection.
+	 */
+	public void showNoConnectionDialog() {
+		DialogHelper.showSimpleAlert(this, R.string.network_error_dialog_title,
+			R.string.network_error_dialog_message, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+				}
+			}
+		);
+	}
 
 	//--------------------------------------------------
 	// Insert or Remove Methods
 	//--------------------------------------------------
-	
-	public void _____INSERT_REMOVE_METHODS_____() {};
 	
 	/**
 	 * Adds the {@link City} into the database. 
@@ -376,6 +418,7 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 	 * 
 	 * @param result
 	 */
+	@SuppressWarnings("unchecked")
 	public void updateCityAdapter(Object result) {
 		mCityList.clear();
 		mCityList.addAll((List<City>)result);
@@ -386,58 +429,24 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 	// Other Methods
 	//--------------------------------------------------
 	
-	public void _____OTHER_METHODS_____() {};
-	
-	/**
-	 * Checks if the city typed by the user is already into the adatper.
-	 * 
-	 * @param cityName
-	 * 
-	 * @return
-	 */
-	public Boolean cityAlreadyInAdapter(String cityName) {
-		Boolean isInside = false;
-		String cityNameLowerCase = cityName.toLowerCase();
-		
-		for (City city : mCityList) {
-			String currentCityName = city.getCity().toLowerCase();
-			if (currentCityName.contains(cityNameLowerCase)) {
-				isInside = true;
-			}
-		}
-		return isInside;
-	}
-	
-	/**
-	 * Gets the city position into the list.
-	 * 
-	 * @return
-	 */
-	public Integer getCityPositionFromId() {
-		Integer position = 0;
-		City city = null;
-		for (int i = 0; i < mCityList.size(); i++) {
-			city = mCityList.get(i);
-			if (city.getId() == mCityId) {
-				position = i;
-			}
-		}
-		return position;
-	}
-	
 	/**
 	 * Call the {@link Dialog} to adda {@link City} to the adapter.
 	 */
 	public void getCityDialog() {
-		// Gets the city from the dialog.
-		DialogHelper.showCustomDialog(this, R.layout.custom_dialog, R.string.activity_main__city_dialog_title,
-			new OnClickListenerCustomDialog() {
-				@Override
-				public void onClickCallback(Context context, String city) {
-					getCityInfoFromApi(city);
+		// Check if there is Network connection.
+		if (Utils.checkConnection(this)) {
+			// Gets the city from the dialog.
+			DialogHelper.showCustomDialog(this, R.layout.custom_dialog, R.string.activity_main__city_dialog_title,
+				new OnClickListenerCustomDialog() {
+					@Override
+					public void onClickCallback(Context context, String city) {
+						getCityInfoFromApi(city);
+					}
 				}
-			}
-		);
+			);
+		} else {
+			showNoConnectionDialog();
+		}
 	}
 	
 	/**
@@ -468,23 +477,24 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 	// Listener
 	//--------------------------------------------------
 	
-	public void __________LISTENER__________() {};
-	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		mCityName = mCityList.get(position).getCity();
-		String message = getString(R.string.activity_main__loading_data) +
-			" " + mCityName + "..."; 
-		mDialog = DialogHelper.showProgressDialog(MainActivity.this, message);
-		getWeatherInfo();
+		// Check if there is Network connection.
+		if (Utils.checkConnection(this)) {
+			mCityName = mCityList.get(position).getCity();
+			String message = getString(R.string.activity_main__loading_data) +
+				" " + mCityName + "..."; 
+			mDialog = DialogHelper.showProgressDialog(MainActivity.this, message);
+			getWeatherInfo();
+		} else {
+			showNoConnectionDialog();
+		}
 	}
 	
 	//--------------------------------------------------
 	// Notifiable
 	//--------------------------------------------------
 
-	public void __________NOTIFIABLE__________() {};
-	
 	/**
 	 * Do the actions for the return of the task called into {@link ContentManager}.
 	 * 

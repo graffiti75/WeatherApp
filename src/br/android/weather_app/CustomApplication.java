@@ -7,23 +7,13 @@ import br.android.weather_app.manager.ContentManager;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 /**
+ * CustomApplication.java class.
  * A custom application class to manage the global application state.
  * 
  * @author Rodrigo Cericatto
  * @since 17/10/2014
  */
 public class CustomApplication extends Application {
-	
-	//--------------------------------------------------
-	// Statics
-	//--------------------------------------------------
-	
-	// The root package name.
-	public static final String ROOT_PACKAGE_NAME;
-	static {
-		Class<?> clazz = CustomApplication.class;
-		ROOT_PACKAGE_NAME = clazz.getPackage().getName();
-	}
 	
 	//--------------------------------------------------
 	// Application Life Cycle Methods

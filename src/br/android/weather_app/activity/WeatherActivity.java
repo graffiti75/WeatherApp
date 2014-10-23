@@ -3,19 +3,19 @@ package br.android.weather_app.activity;
 import java.util.List;
 
 import retrofit.RestAdapter;
-
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.ListView;
 import br.android.weather_app.R;
 import br.android.weather_app.adapter.WeatherDayAdapter;
 import br.android.weather_app.api.WeatherService;
-import br.android.weather_app.api.WeatherServiceErrorHandler;
 import br.android.weather_app.api.model.Weather;
 import br.android.weather_app.api.model.WeatherResponse;
 import br.android.weather_app.helper.DialogHelper;
 import br.android.weather_app.manager.ContentManager;
 import br.android.weather_app.tasks.Notifiable;
+import br.android.weather_app.utils.Utils;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -105,7 +105,7 @@ public class WeatherActivity extends SherlockActivity implements Notifiable {
 	}
 	
 	/**
-	 * Adds values of the list, customizes adapter, and set's list view adapter and it's listener.
+	 * Adds values of the list, customizes adapter, and set's list view adapter and it's mListener.
 	 */
 	public void setAdapter() {
 		// Gets the Weather list.
@@ -127,7 +127,6 @@ public class WeatherActivity extends SherlockActivity implements Notifiable {
 	public void setRetrofitService() {
 		RestAdapter restAdapter = new RestAdapter.Builder()
 			.setEndpoint("http://api.worldweatheronline.com")
-			.setErrorHandler(new WeatherServiceErrorHandler())
 			.build();
 
 		mService = restAdapter.create(WeatherService.class);
@@ -150,14 +149,33 @@ public class WeatherActivity extends SherlockActivity implements Notifiable {
 	 * Refreshes the {@link Weather} list.
 	 */
 	public void refreshList() {
-		// Shows a dialog for the user.
-		String message = getString(R.string.activity_weather__loading_data) +
-			" " + mCityName + "..."; 
-		mDialog = DialogHelper.showProgressDialog(this, message);
-		
-		// Calls the API.
-		setRetrofitService();
-		ContentManager.getInstance().getWeatherResponse(this, mService, mCityName);
+		// Check if there is Network connection.
+		if (Utils.checkConnection(this)) {
+			// Shows a loading dialog for the user.
+			String message = getString(R.string.activity_weather__loading_data) +
+				" " + mCityName + "..."; 
+			mDialog = DialogHelper.showProgressDialog(this, message);
+			
+			// Calls the API.
+			setRetrofitService();
+			ContentManager.getInstance().getWeatherResponse(this, mService, mCityName);
+		} else {
+			showNoConnectionDialog();
+		}
+	}
+	
+	/**
+	 * Shows a error message for the user if we don't have Network connection.
+	 */
+	public void showNoConnectionDialog() {
+		DialogHelper.showSimpleAlert(this, R.string.network_error_dialog_title,
+			R.string.network_error_dialog_message, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+				}
+			}
+		);
 	}
 	
 	//--------------------------------------------------
