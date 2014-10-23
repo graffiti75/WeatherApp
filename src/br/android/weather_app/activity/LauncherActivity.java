@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Locale;
 
 import retrofit.RestAdapter;
-
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,8 +22,10 @@ import android.widget.Toast;
 import br.android.weather_app.R;
 import br.android.weather_app.api.WeatherService;
 import br.android.weather_app.api.model.CurrentCondition;
+import br.android.weather_app.api.model.Request;
 import br.android.weather_app.api.model.WeatherResponse;
 import br.android.weather_app.manager.ContentManager;
+import br.android.weather_app.model.City;
 import br.android.weather_app.tasks.Notifiable;
 import br.android.weather_app.utils.ActivityUtils;
 
@@ -40,7 +42,7 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	//--------------------------------------------------
 	
 	public static final String USER_ALLOW_EXTRA = "user_allow_extra";
-	public static Integer DELAY = 2000;
+	public static Integer DELAY = 3000;
 	
 	//--------------------------------------------------
 	// Attributes
@@ -50,7 +52,9 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	private WeatherService mService;
 	
 	// Handler.
-	private Handler mHandler = new Handler();
+	private Handler mMainActivityHandler = new Handler();
+	private Handler mUserCityHandler = new Handler();
+	private Dialog mDialog;
 	
 	// Coordenates.
 	private Double mLatitude;
@@ -79,7 +83,43 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 			finish();
 		}
 		
-		// Checks if the GPS is on or not.
+		mUserCityHandler.postDelayed(mUserCityHandlerChecker, DELAY);
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		// Turns off the GPS.
+		LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		locationManager.removeUpdates(this);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mMainActivityHandler.removeCallbacks(mMainActivityHandlerChecker);
+		mUserCityHandler.removeCallbacks(mUserCityHandlerChecker);
+	}
+
+	//--------------------------------------------------
+	// Methods
+	//--------------------------------------------------
+
+	/**
+	 * Sets the {@link WeatherService} from the Retrofit.
+	 */
+	public void setRetrofitService() {
+		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(
+			"http://api.worldweatheronline.com").build();
+
+		mService = restAdapter.create(WeatherService.class);
+	}
+	
+	/**
+	 * Checks if the GPS is on or not.
+	 */
+	public void checkGps() {
 		LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 			// GPS is on.
@@ -102,41 +142,12 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.cancel();
-					openMainActivity();
+					mMainActivityHandler.postDelayed(mMainActivityHandlerChecker, DELAY);
 				}
 			});
 			AlertDialog alert = builder.create();
 			alert.show();
 		}
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		
-		// Turns off the GPS.
-		LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		locationManager.removeUpdates(this);
-	}
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		mHandler.removeCallbacks(mHandlerChecker);
-	}
-
-	//--------------------------------------------------
-	// Methods
-	//--------------------------------------------------
-
-	/**
-	 * Sets the {@link WeatherService} from the Retrofit.
-	 */
-	public void setRetrofitService() {
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(
-			"http://api.worldweatheronline.com").build();
-
-		mService = restAdapter.create(WeatherService.class);
 	}
 	
 	/**
@@ -181,14 +192,20 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	 */
 	public void setRequestListInCache(WeatherResponse response) {
 		ContentManager.getInstance().setRequestList(response);
-		mHandler.postDelayed(mHandlerChecker, DELAY);
+		mMainActivityHandler.postDelayed(mMainActivityHandlerChecker, DELAY);
 	}
 	
 	/**
 	 * Opens the {@link MainActivity}.
 	 */
 	public void openMainActivity() {
+		// Closes the dialog and sets the flag of this activity.
 		mActivityAlreadyAcessed = true;
+		if (mDialog != null) {
+			mDialog.cancel();
+		}
+		
+		// Extras.
 		Bundle extras = new Bundle();
 		extras.putBoolean(USER_ALLOW_EXTRA, mUserAllowGps);
 		ActivityUtils.openActivity(this, MainActivity.class, extras);
@@ -208,16 +225,26 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	}
 	
 	//--------------------------------------------------
-	// Handler
+	// Handlers
 	//--------------------------------------------------
 	
 	/**
-	 * Calls level list.
+	 * The {@link Handler} checker before this {@link Activity} go to the {@link MainActivity}. 
 	 */
-	private Runnable mHandlerChecker = new Runnable() {
+	private Runnable mMainActivityHandlerChecker = new Runnable() {
 	    public void run() {
-	    	mHandler.removeCallbacks(mHandlerChecker);
+	    	mMainActivityHandler.removeCallbacks(mMainActivityHandlerChecker);
 	    	openMainActivity();
+	    }
+	};
+	
+	/**
+	 * The {@link Handler} checker before the user {@link City} be discovered.
+	 */
+	private Runnable mUserCityHandlerChecker = new Runnable() {
+	    public void run() {
+	    	mUserCityHandler.removeCallbacks(mUserCityHandlerChecker);
+	    	checkGps();
 	    }
 	};
 	

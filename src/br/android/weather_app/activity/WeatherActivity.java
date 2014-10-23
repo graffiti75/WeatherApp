@@ -63,7 +63,7 @@ public class WeatherActivity extends SherlockActivity implements Notifiable {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.menu_application, menu);
+		getSupportMenuInflater().inflate(R.menu.menu_activity_weather, menu);
 		return true;
 	}
 	

@@ -20,6 +20,7 @@
     <string name="activity_weather__loading_data">Refreshing data from </string>
     
     <!-- Menu -->
+    <string name="menu_add">Add City</string>
     <string name="menu_refresh">Refresh</string>
     
     <!-- Dialog -->

@@ -12,25 +12,4 @@
         android:layout_centerInParent="true"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_mtt_big" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/activity_launcher__loading"
-            android:textColor="@color/color_black" />
-
-        <ProgressBar
-            style="@android:style/Widget.ProgressBar.Small.Inverse"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginLeft="10dp"
-            android:indeterminate="true" />
-    </LinearLayout>
 </LinearLayout>

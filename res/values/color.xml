@@ -3,9 +3,9 @@
     <color name="color_black">#000000</color>
     <color name="color_white">#FFFFFF</color>
 
-	<color name="color_gray_dark">#C5CAE9</color>
-    <color name="color_gray_normal">#E8EAF6</color>
-    <color name="color_gray_light">#FEFEFE</color>
+	<color name="color_gray_dark">#9FA8DA</color>
+    <color name="color_gray_normal">#C5CAE9</color>
+    <color name="color_gray_light">#E8EAF6</color>
     
     <color name="color_blue_dark">#0277BD</color>
     <color name="color_blue_normal">#81D4FA</color>

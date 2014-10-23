@@ -5,7 +5,6 @@ import java.util.List;
 
 import retrofit.RestAdapter;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -35,6 +34,8 @@ import br.android.weather_app.tasks.Notifiable;
 import br.android.weather_app.utils.ActivityUtils;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -45,7 +46,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
  * @author Rodrigo Cericatto
  * @since 19/10/2014
  */
-public class MainActivity extends SherlockActivity implements Notifiable, OnClickListener {
+public class MainActivity extends SherlockActivity implements Notifiable {
 
 	//--------------------------------------------------
 	// Constants
@@ -72,7 +73,6 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnClic
 	private TextView mWindSpeedTextView;
 	
 	// Layout.
-	private Button mAddButton;
 	private Dialog mDialog = null;
 
 	// Rest.
@@ -103,7 +103,26 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnClic
 		getExtras();
 		setCurrentDay();
 		setAdapter();
-		setLayout();
+	}
+	
+	//--------------------------------------------------
+	// Menu
+	//--------------------------------------------------
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.menu_activity_main, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.id_menu_add:
+				addCity();
+				break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	//--------------------------------------------------
@@ -220,14 +239,6 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnClic
 		mListView = (ListView) findViewById(R.id.id_activity_main__listview);
 		mAdapter = new CityAdapter(mCityList);
 		mListView.setAdapter(mAdapter);
-	}
-
-	/**
-	 * Sets the layout of this {@link Activity}.
-	 */
-	public void setLayout() {
-		mAddButton = (Button) findViewById(R.id.id_activity_main__add_city_button);
-		mAddButton.setOnClickListener(this);
 	}
 
 	//--------------------------------------------------
@@ -350,28 +361,10 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnClic
 		});
 	}
 	
-	//--------------------------------------------------
-	// Notifiable
-	//--------------------------------------------------
-
-	@Override
-	public void taskFinished(int type, Object result) {
-		if (type == ContentManager.FETCH_TASK.WEATHER) {
-			WeatherResponse response = (WeatherResponse) result;
-			if (mCheckingCity) {
-				setRequestListInCache(response);
-			} else {
-				setWeatherListInCache(response);
-			}
-		}
-	}
-
-	//--------------------------------------------------
-	// Listeners
-	//--------------------------------------------------
-
-	@Override
-	public void onClick(View view) {
+	/**
+	 * Adds a {@link City} to the adapter.
+	 */
+	public void addCity() {
 		// Gets the city from the dialog.
 		DialogHelper.showCustomDialog(this, R.layout.custom_dialog,
 			R.string.activity_main__city_dialog_title,
@@ -393,6 +386,22 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnClic
 		);
 	}
 	
+	//--------------------------------------------------
+	// Notifiable
+	//--------------------------------------------------
+
+	@Override
+	public void taskFinished(int type, Object result) {
+		if (type == ContentManager.FETCH_TASK.WEATHER) {
+			WeatherResponse response = (WeatherResponse) result;
+			if (mCheckingCity) {
+				setRequestListInCache(response);
+			} else {
+				setWeatherListInCache(response);
+			}
+		}
+	}
+
 	/**
 	 * CityTouchListener.java class.
 	 * This class is used to link the Swipe action of the Adapter with
