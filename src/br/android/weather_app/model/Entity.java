@@ -9,7 +9,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * An abstract class for database objects.
  * 
  * @author Rodrigo Cericatto
- * @since 14/10/2014
+ * @since 17/10/2014
  */
 @DatabaseTable
 public abstract class Entity {

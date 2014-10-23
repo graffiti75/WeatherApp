@@ -26,7 +26,7 @@ import com.j256.ormlite.table.TableUtils;
  * A helper class that manages your database connection and your persisted objects.
  * 
  * @author Rodrigo Cericatto
- * @since 14/10/2014
+ * @since 17/10/2014
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	

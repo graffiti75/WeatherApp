@@ -10,7 +10,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
  * A custom application class to manage the global application state.
  * 
  * @author Rodrigo Cericatto
- * @since 14/10/2014
+ * @since 17/10/2014
  */
 public class CustomApplication extends Application {
 	

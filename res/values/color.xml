@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_background">#111126</color>
-    
     <color name="color_black">#000000</color>
     <color name="color_white">#FFFFFF</color>
-    
-    <color name="color_gray">#4F4F5E</color>
-    <color name="color_gray_light">#7F7F94</color>
-    <color name="color_gray_dark">#484857</color>
-    <color name="color_gray_normal">#2F2F3E</color>
-    <color name="color_gray_clicked">#23232F</color>
-    <color name="color_gray_blue">#B3B3C7</color>
-    <color name="color_gray_break">#38384A</color>
-    <color name="color_gray_break_text">#575773</color>
-    
-    <color name="color_green">#53BD7A</color>
 
-    <color name="color_purple_normal">#481F77</color>
-    <color name="color_purple_clicked">#311F46</color>
+	<color name="color_gray_dark">#C5CAE9</color>
+    <color name="color_gray_normal">#E8EAF6</color>
+    <color name="color_gray_light">#FEFEFE</color>
     
-    <color name="color_blue_normal">#0088DD</color>
-    <color name="color_blue_clicked">#336699</color>
-    <color name="color_blue_dark">#000040</color>
+    <color name="color_blue_dark">#0277BD</color>
+    <color name="color_blue_normal">#81D4FA</color>
+    <color name="color_blue_light">#E1F5FE</color>
     
-    <color name="color_yellow">#ECD900</color>
+    <color name="color_yellow_dark">#FBC02D</color>
+    <color name="color_yellow_normal">#ECD900</color>
+    <color name="color_yellow_light">#FFFF00</color>
+    
+	<color name="color_red_dark">#DD191D</color>
+    <color name="color_red_normal">#F36C60</color>
+    <color name="color_red_light">#FDE0DC</color>
 </resources>

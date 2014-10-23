@@ -3,12 +3,15 @@ package br.android.weather_app.adapter;
 import java.util.Calendar;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import br.android.weather_app.R;
 import br.android.weather_app.api.model.Weather;
@@ -21,7 +24,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
  * WeatherDayAdapter.java class.
  * 
  * @author Rodrigo Cericatto
- * @since 14/10/2014
+ * @since 17/10/2014
  */
 public class WeatherDayAdapter extends BaseAdapter {
 
@@ -37,7 +40,9 @@ public class WeatherDayAdapter extends BaseAdapter {
 	//--------------------------------------------------
 	
 	public class ViewHolder {
+		private LinearLayout mBackgroundLinearLayout;
 		private TextView mCurrentDayTextView;
+		private TextView mCurrentDayDescTextView;
 		private ImageView mCurrentWeatherImageView;
 		private TextView mMinTemperatureTextView;
 		private TextView mMaxTemperatureTextView;
@@ -53,6 +58,15 @@ public class WeatherDayAdapter extends BaseAdapter {
 			setPrecipTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__precip_text_view));
 			setWindDirTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__wind_dir_text_view));
 			setWindSpeedTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__wind_speed_text_view));
+			setCurrentDayDescTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__current_day_desc_text_view));
+			setBackgroundLinearLayout((LinearLayout)view.findViewById(R.id.id_weather_day_adapter__linear_layout));
+		}
+		
+		public LinearLayout getBackgroundLinearLayout() {
+			return mBackgroundLinearLayout;
+		}
+		public void setBackgroundLinearLayout(LinearLayout backgroundLinearLayout) {
+			mBackgroundLinearLayout = backgroundLinearLayout;
 		}
 		
 		public TextView getCurrentDayTextView() {
@@ -60,6 +74,13 @@ public class WeatherDayAdapter extends BaseAdapter {
 		}
 		public void setCurrentDayTextView(TextView currentDayTextView) {
 			mCurrentDayTextView = currentDayTextView;
+		}
+		
+		public TextView getCurrentDayDescTextView() {
+			return mCurrentDayDescTextView;
+		}
+		public void setCurrentDayDescTextView(TextView currentDayDescTextView) {
+			mCurrentDayDescTextView = currentDayDescTextView;
 		}
 
 		public ImageView getCurrentWeatherImageView() {
@@ -156,11 +177,16 @@ public class WeatherDayAdapter extends BaseAdapter {
 	 * @param position
 	 * @param holder
 	 */
+	@SuppressLint("NewApi")
 	public void getData(Integer position, ViewHolder holder) {
 		// Fills the list item view with the appropriate data.
 		Weather instance = (Weather)getItem(position);
 		
-		// Current date.
+		// Background linear layout.
+		Drawable color = getTemperatureColor(instance);
+		holder.getBackgroundLinearLayout().setBackground(color);
+		
+		// Current day.
 		String parts[] = instance.getDate().split("-");
 		String dayOfMonth = parts[2];
 		String currentDate = getCurrentWeekday(Integer.valueOf(dayOfMonth));
@@ -168,6 +194,10 @@ public class WeatherDayAdapter extends BaseAdapter {
 		currentDate = currentDate + ", " + date;
 		holder.getCurrentDayTextView().setText(currentDate);
 
+		// Current day description.
+		String currentDayDescription = instance.getWeatherDesc().get(0).getValue();
+		holder.getCurrentDayDescTextView().setText(currentDayDescription);
+		
 		// Weather image.
 		setUniversalImage(instance.getWeatherIconUrl().get(0).getValue(), holder.getCurrentWeatherImageView());
 		
@@ -248,5 +278,31 @@ public class WeatherDayAdapter extends BaseAdapter {
 				break;
 		}
 		return dayInString;
+	}
+	
+	/**
+	 * Gets the {@link Drawable} according to the current temperature. 
+	 * 
+	 * @param instance
+	 * @return
+	 */
+	public Drawable getTemperatureColor(Weather instance) {
+		Integer minTemperature = instance.getTempMinC();
+		Integer maxTemperature = instance.getTempMaxC();
+		Double quotient = (double) ((minTemperature + maxTemperature) / 2);
+		Integer medium = quotient.intValue();
+		Drawable drawable = null;
+		
+		if (medium <= 0) {
+			drawable = mContext.getResources().getDrawable(R.drawable.background_gray);
+		} else if (medium > 0 && medium <= 15) {
+			drawable = mContext.getResources().getDrawable(R.drawable.background_blue);
+		} else if (medium > 15 && medium <= 30) {
+			drawable = mContext.getResources().getDrawable(R.drawable.background_yellow);
+		} else {
+			drawable = mContext.getResources().getDrawable(R.drawable.background_red);
+		}
+		
+		return drawable;
 	}
 }

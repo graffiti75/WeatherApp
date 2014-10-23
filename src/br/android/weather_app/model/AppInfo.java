@@ -4,10 +4,10 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
- * AppInfo class.
+ * AppInfo.java class.
  * 
  * @author Rodrigo Cericatto
- * @since Jun 26 2013
+ * @since 17/10/2014
  */
 @DatabaseTable
 public class AppInfo extends Entity {

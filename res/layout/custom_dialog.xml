@@ -7,4 +7,5 @@
     android:layout_marginRight="10dp"
     android:hint="@string/activity_main__city_hint_edit_text"
     android:padding="10dp"
+    android:singleLine="true"
     android:textSize="18dp" />

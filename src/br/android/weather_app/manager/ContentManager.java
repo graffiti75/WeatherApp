@@ -17,7 +17,7 @@ import br.android.weather_app.tasks.WeatherAsyncTask;
  * ContentManager.java class.
  * 
  * @author Rodrigo Cericatto
- * @since 14/10/2014
+ * @since 17/10/2014
  */
 public class ContentManager {
 

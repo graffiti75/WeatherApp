@@ -12,7 +12,7 @@ import br.android.weather_app.model.City;
  * ListItems.java class.
  * 
  * @author Rodrigo Cericatto
- * @since 14/10/2014
+ * @since 17/10/2014
  */
 public class ListItems {
 	

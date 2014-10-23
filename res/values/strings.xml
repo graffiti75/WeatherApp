@@ -13,6 +13,12 @@
     <string name="activity_main__empty_city_dialog_title">Error</string>
     <string name="activity_main__empty_city_dialog_message">This city doesn\'t exist!</string>
     
+    <!-- Weather Activity -->
+    <string name="activity_weather__loading_data">Refreshing data from </string>
+    
+    <!-- Menu -->
+    <string name="menu_refresh">Refresh</string>
+    
     <!-- Dialog -->
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancelar</string>
