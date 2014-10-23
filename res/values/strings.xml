@@ -9,13 +9,14 @@
     
     <!-- Main Activity -->
     <string name="activity_main__other_city_button">Other City</string>
-    
     <string name="activity_main__loading_data">Loading data from </string>
-    <string name="activity_main__remove_button">Remove</string>
+	
 	<string name="activity_main__city_dialog_title">Which city do you want to add?</string>
     <string name="activity_main__city_hint_edit_text">Type the city name here&#8230;</string>
     <string name="activity_main__empty_city_dialog_title">Error</string>
     <string name="activity_main__empty_city_dialog_message">This city doesn\'t exist!</string>
+    <string name="activity_main__repeated_city_dialog_title">Error</string>
+    <string name="activity_main__repeated_city_dialog_message">This city already exists into the adapter!</string>
     
     <!-- Weather Activity -->
     <string name="activity_weather__loading_data">Refreshing data from </string>

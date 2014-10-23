@@ -6,6 +6,7 @@ import java.util.List;
 import retrofit.RestAdapter;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -280,24 +281,33 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 	 */
 	public void setRequestListInCache(WeatherResponse response) {
 		Boolean loadedSuccessfully = ContentManager.getInstance().setRequestList(response);
-		if (loadedSuccessfully) {
-			// Adds the city into the adapter.
-			addCityInDatabase();
-			
-			// Closes the current dialog.
-			if (mDialog != null) {
-				mDialog.cancel();
-			}
+		String citySearched = ContentManager.getInstance().getCityFromRequest();
+		Boolean cityRepeated = cityAlreadyInAdapter(citySearched);		
+		
+		// Checks if the city is already into the adapter.
+		if (cityRepeated) {
+			DialogHelper.showSimpleAlert(this, R.string.activity_main__repeated_city_dialog_title,
+				R.string.activity_main__repeated_city_dialog_message);
+			closeProgressDialog();
 		} else {
-			// Shows a error message for the user.
-			DialogHelper.showSimpleAlert(this, R.string.activity_main__empty_city_dialog_title,
-				R.string.activity_main__empty_city_dialog_message);
-			if (mDialog != null) {
-				mDialog.cancel();
+			// Checks if the city was successfully added into the database.
+			if (loadedSuccessfully) {
+				// Adds the city into the adapter.
+				addCityInDatabase();
+				
+				// Closes the current dialog.
+				if (mDialog != null) {
+					mDialog.cancel();
+				}
+			} else {
+				// If city wasn't successfully added into the database, shows a error message for the user.
+				DialogHelper.showSimpleAlert(this, R.string.activity_main__empty_city_dialog_title,
+					R.string.activity_main__empty_city_dialog_message);
+				closeProgressDialog();
+				mCityAddedOnDatabase = false;
 			}
-			mCityAddedOnDatabase = false;
+			mCheckingCity = false;
 		}
-		mCheckingCity = false;
 	}
 	
 	/**
@@ -382,6 +392,26 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 	public void _____OTHER_METHODS_____() {};
 	
 	/**
+	 * Checks if the city typed by the user is already into the adatper.
+	 * 
+	 * @param cityName
+	 * 
+	 * @return
+	 */
+	public Boolean cityAlreadyInAdapter(String cityName) {
+		Boolean isInside = false;
+		String cityNameLowerCase = cityName.toLowerCase();
+		
+		for (City city : mCityList) {
+			String currentCityName = city.getCity().toLowerCase();
+			if (currentCityName.contains(cityNameLowerCase)) {
+				isInside = true;
+			}
+		}
+		return isInside;
+	}
+	
+	/**
 	 * Gets the extras.
 	 */
 	public void getExtras() {
@@ -424,6 +454,15 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 	}
 	
 	/**
+	 * Closes the current {@link ProgressDialog}.
+	 */
+	public void closeProgressDialog() {
+		if (mDialog != null) {
+			mDialog.cancel();
+		}
+	}
+	
+	/**
 	 * Opens the {@link WeatherActivity}.
 	 */
 	public void openWeatherActivity() {
@@ -433,9 +472,7 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 		extras.putString(CITY_NAME_EXTRA, cityFromResquest);
 
 		// Transition.
-		if (mDialog != null) {
-			mDialog.cancel();
-		}
+		closeProgressDialog();
 		ActivityUtils.openActivity(this, WeatherActivity.class, extras);
 		overridePendingTransition(R.anim.slide_up_from_outside, R.anim.slide_up_to_outside);
 	}
