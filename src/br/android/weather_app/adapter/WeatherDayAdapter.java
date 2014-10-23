@@ -41,12 +41,18 @@ public class WeatherDayAdapter extends BaseAdapter {
 		private ImageView mCurrentWeatherImageView;
 		private TextView mMinTemperatureTextView;
 		private TextView mMaxTemperatureTextView;
+		private TextView mPrecipTextView;
+		private TextView mWindDirTextView;
+		private TextView mWindSpeedTextView;
 		
 		ViewHolder(View view) {
 			setCurrentDayTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__current_day_text_view));
 			setCurrentWeatherImageView((ImageView)view.findViewById(R.id.id_weather_day_adapter__current_weather_image_view));
 			setMinTemperatureTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__min_temperature_text_view));
 			setMaxTemperatureTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__max_temperature_text_view));
+			setPrecipTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__precip_text_view));
+			setWindDirTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__wind_dir_text_view));
+			setWindSpeedTextView((TextView)view.findViewById(R.id.id_weather_day_adapter__wind_speed_text_view));
 		}
 		
 		public TextView getCurrentDayTextView() {
@@ -75,6 +81,27 @@ public class WeatherDayAdapter extends BaseAdapter {
 		}
 		public void setMaxTemperatureTextView(TextView maxTemperatureTextView) {
 			mMaxTemperatureTextView = maxTemperatureTextView;
+		}
+
+		public TextView getPrecipTextView() {
+			return mPrecipTextView;
+		}
+		public void setPrecipTextView(TextView precipTextView) {
+			this.mPrecipTextView = precipTextView;
+		}
+
+		public TextView getWindDirTextView() {
+			return mWindDirTextView;
+		}
+		public void setWindDirTextView(TextView windDirTextView) {
+			this.mWindDirTextView = windDirTextView;
+		}
+
+		public TextView getWindSpeedTextView() {
+			return mWindSpeedTextView;
+		}
+		public void setWindSpeedTextView(TextView windSpeedTextView) {
+			this.mWindSpeedTextView = windSpeedTextView;
 		}
 	}
 	
@@ -149,6 +176,17 @@ public class WeatherDayAdapter extends BaseAdapter {
 		holder.getMinTemperatureTextView().setText(minTemperature);
 		String maxTemperature = instance.getTempMaxC().toString() + "ºC";
 		holder.getMaxTemperatureTextView().setText(maxTemperature);
+		
+		// Precipitation.
+		String precipitation = instance.getPrecipMM().toString() + " mm";
+		holder.getPrecipTextView().setText(precipitation);
+		
+		// Wind Direction and Wind Speed.
+		String windDirection = instance.getWinddirection();
+		holder.getWindDirTextView().setText(windDirection);
+		
+		String windSpeed = instance.getWindspeedKmph().toString() + " km/h";
+		holder.getWindSpeedTextView().setText(windSpeed);
 	}
 	
 	/**
