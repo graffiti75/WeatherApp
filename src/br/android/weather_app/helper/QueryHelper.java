@@ -7,7 +7,7 @@ import android.content.Context;
 import android.util.Log;
 import br.android.weather_app.AppConfiguration;
 import br.android.weather_app.model.AppInfo;
-import br.android.weather_app.model.Bean;
+import br.android.weather_app.model.City;
 
 import com.j256.ormlite.dao.Dao;
 
@@ -110,26 +110,24 @@ public class QueryHelper {
 	}
 	
 	//--------------------------------------------------
-	// Bean
+	// City
 	//--------------------------------------------------
 	
 	/**
-	 * Gets the Bean list from the database.
+	 * Gets the {@link City} list from the database.
 	 * 
 	 * @param context The context of the application.
 	 * 
-	 * @return The list of Bean.
+	 * @return The list of {@link City}.
 	 */
-	public static List<Bean> getBeanList(Context context) {
+	public static List<City> getCityList(Context context) {
 		// Getting the database helper.
 		DatabaseHelper databaseHelper = DatabaseHelper.getHelper(context);
-		List<Bean> list = null;
+		List<City> list = null;
 		
 		try {
-    		// Getting the Bean.
-    		Dao<Bean, Integer> beanDao = databaseHelper.getDao(Bean.class);
-    		// Return all Bean.
-    		list = beanDao.queryForAll();
+    		Dao<City, Integer> cityDao = databaseHelper.getDao(City.class);
+    		list = cityDao.queryForAll();
 		} catch (SQLException e) {
 			Log.e(AppConfiguration.COMMON_LOGGING_TAG, "Database exception.", e);
 		} finally {
@@ -140,29 +138,60 @@ public class QueryHelper {
 	}
 	
 	/**
-	 * Persists the Bean list into the database.
+	 * Persists the {@link City} list into the database.
 	 * 
 	 * @param context The context of the application.
-	 * @param list The Bean list.
+	 * @param list The {@link City} list.
+	 * 
+	 * @return
 	 */
-	public static void persistBean(Context context, final List<Bean> list) {
-		// Getting the database helper.
+	public static Boolean persistCity(Context context, final List<City> list) {
 		DatabaseHelper databaseHelper = DatabaseHelper.getHelper(context);
+		Boolean success = true;
+		
 		try {
 			// Persisting.
-			for (Bean bean : list) {
+			for (City city : list) {
 				// Persisting.
-				databaseHelper.createOrUpdate(bean);
+				databaseHelper.createOrUpdate(city);
 			}
 		} catch (IllegalAccessException e) {
-			Log.e(AppConfiguration.COMMON_LOGGING_TAG, "Error while trying to create or update Bean.", e);
+			success = false;
+			Log.e(AppConfiguration.COMMON_LOGGING_TAG, "Error while trying to create or update City.", e);
 		} catch (SQLException e) {
+			success = false;
 			Log.e(AppConfiguration.COMMON_LOGGING_TAG, "Database exception.", e);
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			success = false;
+			Log.e(AppConfiguration.COMMON_LOGGING_TAG, "Database exception.", e);
 		} finally {
 			// Releasing the database helper.
 			DatabaseHelper.releaseHelper();
 		}
+		return success;
+	}
+	
+	/**
+	 * Removes the {@link City} from the database.
+	 * 
+	 * @param context The context of the application.
+	 * @param city The {@link City} to be removed.
+	 * 
+	 * @return
+	 */
+	public static Boolean removeCity(Context context, City city) {
+		DatabaseHelper databaseHelper = DatabaseHelper.getHelper(context);
+		Boolean success = true;
+		
+		try {
+			databaseHelper.delete(city);
+		} catch (IllegalArgumentException e) {
+			success = false;
+			Log.e(AppConfiguration.COMMON_LOGGING_TAG, "Database exception.", e);
+		} finally {
+			// Releasing the database helper.
+			DatabaseHelper.releaseHelper();
+		}
+		return success;
 	}
 }

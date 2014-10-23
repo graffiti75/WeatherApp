@@ -10,6 +10,7 @@ import android.widget.ListView;
 import br.android.weather_app.R;
 import br.android.weather_app.adapter.WeatherDayAdapter;
 import br.android.weather_app.api.WeatherService;
+import br.android.weather_app.api.WeatherServiceErrorHandler;
 import br.android.weather_app.api.model.Weather;
 import br.android.weather_app.api.model.WeatherResponse;
 import br.android.weather_app.helper.DialogHelper;
@@ -131,8 +132,10 @@ public class WeatherActivity extends SherlockActivity implements Notifiable {
 	 * Sets the {@link WeatherService} from the Retrofit.
 	 */
 	public void setRetrofitService() {
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(
-			"http://api.worldweatheronline.com").build();
+		RestAdapter restAdapter = new RestAdapter.Builder()
+			.setEndpoint("http://api.worldweatheronline.com")
+			.setErrorHandler(new WeatherServiceErrorHandler())
+			.build();
 
 		mService = restAdapter.create(WeatherService.class);
 	}

@@ -98,10 +98,10 @@ public class ListItems {
 	 */
 	public static List<City> getCityList() {
 		List<City> cityList = new ArrayList<City>();
-		cityList.add(new City("Dublin, Ireland", true));
-		cityList.add(new City("London, United Kingdom", true));
-		cityList.add(new City("New York, United States Of America", true));
-		cityList.add(new City("Barcelona, Spain", true));
+		cityList.add(new City(1, "Dublin, Ireland", true));
+		cityList.add(new City(2, "London, United Kingdom", true));
+		cityList.add(new City(3, "New York, United States Of America", true));
+		cityList.add(new City(4, "Barcelona, Spain", true));
 		
 		return cityList;
 	}

@@ -21,6 +21,7 @@ import android.os.Handler;
 import android.widget.Toast;
 import br.android.weather_app.R;
 import br.android.weather_app.api.WeatherService;
+import br.android.weather_app.api.WeatherServiceErrorHandler;
 import br.android.weather_app.api.model.CurrentCondition;
 import br.android.weather_app.api.model.Request;
 import br.android.weather_app.api.model.WeatherResponse;
@@ -42,7 +43,7 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	//--------------------------------------------------
 	
 	public static final String USER_ALLOW_EXTRA = "user_allow_extra";
-	public static Integer DELAY = 3000;
+	public static Integer DELAY = 2000;
 	
 	//--------------------------------------------------
 	// Attributes
@@ -103,18 +104,43 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	}
 
 	//--------------------------------------------------
-	// Methods
+	// API Methods
 	//--------------------------------------------------
 
 	/**
 	 * Sets the {@link WeatherService} from the Retrofit.
 	 */
 	public void setRetrofitService() {
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(
-			"http://api.worldweatheronline.com").build();
+		RestAdapter restAdapter = new RestAdapter.Builder()
+			.setEndpoint("http://api.worldweatheronline.com")
+			.setErrorHandler(new WeatherServiceErrorHandler())
+			.build();
 
 		mService = restAdapter.create(WeatherService.class);
 	}
+	
+	/**
+	 * Sets the {@link CurrentCondition} list from the REST API.
+	 * 
+	 * @param response
+	 */
+	public void setCurrentConditionInCache(WeatherResponse response) {
+		ContentManager.getInstance().setCurrentCondition(response);
+	}
+	
+	/**
+	 * Sets the {@link Request} list from the REST API.
+	 * 
+	 * @param response
+	 */
+	public void setRequestListInCache(WeatherResponse response) {
+		ContentManager.getInstance().setRequestList(response);
+		mMainActivityHandler.postDelayed(mMainActivityHandlerChecker, DELAY);
+	}
+	
+	//--------------------------------------------------
+	// GPS Methods
+	//--------------------------------------------------
 	
 	/**
 	 * Checks if the GPS is on or not.
@@ -176,25 +202,24 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 		return city;
 	}
 	
-	/**
-	 * Sets the {@link CurrentCondition} list from the REST API.
-	 * 
-	 * @param response
-	 */
-	public void setCurrentConditionInCache(WeatherResponse response) {
-		ContentManager.getInstance().setCurrentCondition(response);
-	}
+	//--------------------------------------------------
+	// Other Methods
+	//--------------------------------------------------
 	
-	/**
-	 * Sets the {@link Request} list from the REST API.
-	 * 
-	 * @param response
-	 */
-	public void setRequestListInCache(WeatherResponse response) {
-		ContentManager.getInstance().setRequestList(response);
-		mMainActivityHandler.postDelayed(mMainActivityHandlerChecker, DELAY);
-	}
+    /**
+     * Gets the database info.
+     */
+    public void getDatabaseInfo() {
+    	ContentManager.getInstance().getDatabaseInfo(this, LauncherActivity.this);
+    }
 	
+    /**
+     * Gets data from database.
+     */
+    public void getData() {
+    	ContentManager.getInstance().getCityList(this, LauncherActivity.this);
+    }
+    
 	/**
 	 * Opens the {@link MainActivity}.
 	 */
@@ -217,10 +242,14 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 
 	@Override
 	public void taskFinished(int type, Object result) {
-		if (type == ContentManager.FETCH_TASK.WEATHER) {
+		if (type == ContentManager.FETCH_TASK.UPDATER) {
+			getData();
+		} else if (type == ContentManager.FETCH_TASK.WEATHER) {
 			WeatherResponse response = (WeatherResponse) result;
 			setCurrentConditionInCache(response);
 			setRequestListInCache(response);
+		} else if (type == ContentManager.FETCH_TASK.CITY_LIST) {
+			openMainActivity();
 		}
 	}
 	
@@ -234,7 +263,7 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	private Runnable mMainActivityHandlerChecker = new Runnable() {
 	    public void run() {
 	    	mMainActivityHandler.removeCallbacks(mMainActivityHandlerChecker);
-	    	openMainActivity();
+	    	getDatabaseInfo();
 	    }
 	};
 	

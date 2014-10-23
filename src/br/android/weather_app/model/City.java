@@ -1,18 +1,27 @@
 package br.android.weather_app.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * City.java class.
  * 
  * @author Rodrigo Cericatto
  * @since 18/10/2014
  */
-public class City {
+@DatabaseTable
+public class City extends Entity  {
 
 	//--------------------------------------------------
 	// Attributes
 	//--------------------------------------------------
 	
+	@DatabaseField(id = true)
+	private Integer id;
+	
+	@DatabaseField
 	private String city;
+	
 	private Boolean isVisible;
 	
 	//--------------------------------------------------
@@ -21,8 +30,9 @@ public class City {
 	
 	public City() {}
 	
-	public City(String city, Boolean isVisible) {
+	public City(Integer id, String city, Boolean isVisible) {
 		super();
+		this.id = id;
 		this.city = city;
 		this.isVisible = isVisible;
 	}
@@ -39,6 +49,15 @@ public class City {
 	//--------------------------------------------------
 	// Getters and Setters
 	//--------------------------------------------------
+	
+	@Override
+	public int getId() {
+		return id;
+	}
+	@Override
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 	public String getCity() {
 		return city;

@@ -12,7 +12,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import br.android.weather_app.AppConfiguration;
 import br.android.weather_app.model.AppInfo;
-import br.android.weather_app.model.Bean;
+import br.android.weather_app.model.City;
 import br.android.weather_app.model.Entity;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -37,7 +37,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	// Put here all of your database classes.
 	private static final Class<?>[] sDatabaseTables = {
 		AppInfo.class,
-		Bean.class
+		City.class
 	};
 
     // Cache for foreign fields.

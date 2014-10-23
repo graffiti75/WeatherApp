@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import br.android.weather_app.api.WeatherService;
 import br.android.weather_app.api.model.CurrentCondition;
@@ -12,7 +13,11 @@ import br.android.weather_app.api.model.Request;
 import br.android.weather_app.api.model.Weather;
 import br.android.weather_app.api.model.WeatherResponse;
 import br.android.weather_app.model.City;
+import br.android.weather_app.tasks.AddCityAsyncTask;
+import br.android.weather_app.tasks.GetCityListAsyncTask;
 import br.android.weather_app.tasks.Notifiable;
+import br.android.weather_app.tasks.RemoveCityAsyncTask;
+import br.android.weather_app.tasks.UpdaterAsyncTask;
 import br.android.weather_app.tasks.WeatherAsyncTask;
 
 /**
@@ -29,7 +34,10 @@ public class ContentManager {
 	
 	// Fetch task types.
 	public static final class FETCH_TASK {
-		public static final int WEATHER = 1;
+		public static final int UPDATER = 1;
+		public static final int WEATHER = 2;
+		public static final int CITY_LIST = 3;
+		public static final int CITY_ADD = 4;
 	}
 	
 	//----------------------------------------------
@@ -43,7 +51,13 @@ public class ContentManager {
 	// Attributes
 	//----------------------------------------------
 
+	// The application context.
+	private Context mContext;
+	
 	// Cached values.
+	private Boolean mDatabaseNeedsUpdate = false;
+	private Boolean mDatabaseAccessSucceeded = false;
+	private List<City> mCityList;
 	private WeatherResponse mWeatherResponse = null;
 	private List<Weather> mWeatherList;
 	private CurrentCondition mCurrentCondition;
@@ -76,11 +90,111 @@ public class ContentManager {
 	//----------------------------------------------
 	
 	/**
+	 * Sets the application context.
+	 * 
+	 * @param context The context to be used.
+	 */
+	public void setContext(Context context) {
+		mContext = context;
+	}
+	
+	/**
 	 * Cleans all cached content.
 	 */
 	public void clean() {
 		// Cleaning all cached contents.
 		mWeatherResponse = null;
+	}
+	
+	//----------------------------------------------
+	// Updater
+	//----------------------------------------------
+
+	/**
+	 * Gets the database info from cache.
+	 * 
+	 * @return
+	 */
+	public Boolean getCachedDatabaseInfo() {
+		return mDatabaseNeedsUpdate;
+	}
+	
+	/**
+	 * Gets the database info.
+	 * 
+	 * @param notifiable The notifiable object to be called.
+	 */
+	public void getDatabaseInfo(Notifiable notifiable, Context context) {
+		UpdaterAsyncTask task = new UpdaterAsyncTask(context);
+		if (notifiable != null) {
+			mTaskNotifiables.put(task, notifiable);
+		}
+		task.execute();
+	}
+	
+	//----------------------------------------------
+	// City List
+	//----------------------------------------------
+	
+	/**
+	 * Gets the {@link City} list from cache.
+	 * 
+	 * @return
+	 */
+	public List<City> getCachedCityList() {
+		return mCityList;
+	}
+	
+	/**
+	 * Gets the {@link City} list.
+	 * 
+	 * @param notifiable The notifiable object to be called.
+	 */
+	public void getCityList(Notifiable notifiable, Context context) {
+		GetCityListAsyncTask task = new GetCityListAsyncTask(context, mDatabaseNeedsUpdate);
+		if (notifiable != null) {
+			mTaskNotifiables.put(task, notifiable);
+		}
+		task.execute();
+	}
+	
+	//----------------------------------------------
+	// Add and Remove City
+	//----------------------------------------------
+	
+	/**
+	 * Gets the database access status.
+	 * 
+	 * @return
+	 */
+	public Boolean getDatabaseAccessStatus() {
+		return mDatabaseAccessSucceeded;
+	}
+	
+	/**
+	 * Adds a {@link City} into the database.
+	 * 
+	 * @param notifiable The notifiable object to be called.
+	 * @param context
+	 * @param list 
+	 */
+	public void addCity(Notifiable notifiable, Context context, List<City> list) {
+		AddCityAsyncTask task = new AddCityAsyncTask(context, list);
+		if (notifiable != null) {
+			mTaskNotifiables.put(task, notifiable);
+		}
+		task.execute();
+	}
+	
+	/**
+	 * Removes a {@link City} from the database.
+	 * 
+	 * @param context
+	 * @param city
+	 */
+	public void removeCity(Context context, City city) {
+		RemoveCityAsyncTask task = new RemoveCityAsyncTask(context, city);
+		task.execute();
 	}
 	
 	//----------------------------------------------
@@ -220,13 +334,23 @@ public class ContentManager {
 	 * @param task
 	 * @param result
 	 */
+	@SuppressWarnings("unchecked")
 	public void taskFinished(Object task, Object result) {
 		int taskType = getTaskType(task);
 		
 		// Gets current task result.
-		if (FETCH_TASK.WEATHER == taskType) {
+		if (FETCH_TASK.UPDATER == taskType) {
 			// Puts the database info in the cache.
+			mDatabaseNeedsUpdate = (Boolean)result;
+		} else if (FETCH_TASK.WEATHER == taskType) {
+			// Puts the API call info in the cache.
 			mWeatherResponse = (WeatherResponse)result;
+		} else if (FETCH_TASK.CITY_LIST == taskType) {
+			// Puts the database data in the cache.
+			mCityList = (List<City>)result;
+		} else if (FETCH_TASK.CITY_ADD == taskType) {
+			// Gets the database return.
+			mDatabaseAccessSucceeded = (Boolean)result;
 		}
 		
 		// Removes performed task.
@@ -244,8 +368,14 @@ public class ContentManager {
 	 * @return The task type.
 	 */
 	private int getTaskType(Object task) {
-		if (task instanceof WeatherAsyncTask) {
+		if (task instanceof UpdaterAsyncTask) {
+			return FETCH_TASK.UPDATER;
+		} else if (task instanceof WeatherAsyncTask) {
 			return FETCH_TASK.WEATHER;
+		} else if (task instanceof GetCityListAsyncTask) {
+			return FETCH_TASK.CITY_LIST;
+		} else if (task instanceof AddCityAsyncTask) {
+			return FETCH_TASK.CITY_ADD;
 		}
 		return -1;
 	}

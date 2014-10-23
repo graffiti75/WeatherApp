@@ -22,10 +22,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import br.android.weather_app.R;
 import br.android.weather_app.api.WeatherService;
+import br.android.weather_app.api.WeatherServiceErrorHandler;
 import br.android.weather_app.api.model.CurrentCondition;
 import br.android.weather_app.api.model.Request;
 import br.android.weather_app.api.model.WeatherResponse;
-import br.android.weather_app.data.ListItems;
 import br.android.weather_app.helper.DialogHelper;
 import br.android.weather_app.helper.OnClickListenerCustomDialog;
 import br.android.weather_app.manager.ContentManager;
@@ -85,6 +85,8 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 	private CityAdapter mAdapter;
 	private ListView mListView;
 	private CityTouchListener mOnTouchListener;
+	private City mNewCity;
+	private Boolean mCityAddedOnDatabase = false;
 
 	// Swipe.
 	private Integer mActionDownX = 0;
@@ -119,7 +121,7 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.id_menu_add:
-				addCity();
+				getCityDialog();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -235,9 +237,9 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 	 */
 	public void setAdapter() {
 		mOnTouchListener = new CityTouchListener();
-		mCityList = ListItems.getCityList();
+		mCityList = ContentManager.getInstance().getCachedCityList();
 		mListView = (ListView) findViewById(R.id.id_activity_main__listview);
-		mAdapter = new CityAdapter(mCityList);
+		mAdapter = new CityAdapter(this, mCityList);
 		mListView.setAdapter(mAdapter);
 	}
 
@@ -249,8 +251,10 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 	 * Sets the {@link WeatherService} from the Retrofit.
 	 */
 	public void setRetrofitService() {
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(
-			"http://api.worldweatheronline.com").build();
+		RestAdapter restAdapter = new RestAdapter.Builder()
+			.setEndpoint("http://api.worldweatheronline.com")
+			.setErrorHandler(new WeatherServiceErrorHandler())
+			.build();
 
 		mService = restAdapter.create(WeatherService.class);
 	}
@@ -282,9 +286,7 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 		Boolean loadedSuccessfully = ContentManager.getInstance().setRequestList(response);
 		if (loadedSuccessfully) {
 			// Adds the city into the adapter.
-			String city = ContentManager.getInstance().getCityFromRequest();
-			mCityList.add(new City(city, true));
-			mAdapter.notifyDataSetChanged();
+			addCityInDatabase();
 			
 			// Closes the current dialog.
 			if (mDialog != null) {
@@ -297,10 +299,40 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 			if (mDialog != null) {
 				mDialog.cancel();
 			}
+			mCityAddedOnDatabase = false;
 		}
 		mCheckingCity = false;
 	}
 
+	//--------------------------------------------------
+	// Insert or Remove Methods
+	//--------------------------------------------------
+	
+	/**
+	 * Adds the {@link City} into the database. 
+	 */
+	public void addCityInDatabase() {
+		// Creates a new city.
+		Integer index = mCityList.size() + 1;
+		String city = ContentManager.getInstance().getCityFromRequest();
+		mNewCity = new City(index, city, true);
+		
+		// Adds the city into the database.
+		List<City> list = new ArrayList<City>();
+		list.add(mNewCity);
+		ContentManager.getInstance().addCity(this, MainActivity.this, list);
+	}
+	
+	/**
+	 * Adds the {@link City} into the adapter.
+	 */
+	public void addCityIntoAdapter() {
+		if (mCityAddedOnDatabase) {
+			mCityList.add(mNewCity);
+			mAdapter.notifyDataSetChanged();
+		}
+	}
+	
 	//--------------------------------------------------
 	// Other Methods
 	//--------------------------------------------------
@@ -362,12 +394,11 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 	}
 	
 	/**
-	 * Adds a {@link City} to the adapter.
+	 * Call the {@link Dialog} to adda {@link City} to the adapter.
 	 */
-	public void addCity() {
+	public void getCityDialog() {
 		// Gets the city from the dialog.
-		DialogHelper.showCustomDialog(this, R.layout.custom_dialog,
-			R.string.activity_main__city_dialog_title,
+		DialogHelper.showCustomDialog(this, R.layout.custom_dialog, R.string.activity_main__city_dialog_title,
 			new OnClickListenerCustomDialog() {
 				@Override
 				public void onClickCallback(Context context, String city) {
@@ -399,8 +430,15 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 			} else {
 				setWeatherListInCache(response);
 			}
+		} else if (type == ContentManager.FETCH_TASK.CITY_ADD) {
+			mCityAddedOnDatabase = (Boolean)result;
+			addCityIntoAdapter();
 		}
 	}
+	
+	//--------------------------------------------------
+	// Listener
+	//--------------------------------------------------
 
 	/**
 	 * CityTouchListener.java class.
@@ -450,11 +488,13 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 
 		//------------ Attributes ------------
 		
+		private Context mContext;
 		private List<City> mAdapterCityList;
 
 		//------------ Constructor ------------
 		
-		public CityAdapter(List<City> data) {
+		public CityAdapter(Context context, List<City> data) {
+			mContext = context;
 			mAdapterCityList = data;
 		}
 
@@ -521,11 +561,16 @@ public class MainActivity extends SherlockActivity implements Notifiable {
 		//------------ Listeners ------------
 		
 		@Override
-		public void onClick(View v) {
-			final int pos = (Integer) v.getTag();
-			mCityList.get(pos).setVisible(false);
-			mCityList.remove(pos);
-			v.setVisibility(View.GONE);
+		public void onClick(View view) {
+			final int position = (Integer) view.getTag();
+			
+			// Removes from the database.
+			ContentManager.getInstance().removeCity(mContext, mCityList.get(position));
+			
+			// Removes from the adapter.
+			mCityList.get(position).setVisible(false);
+			mCityList.remove(position);
+			view.setVisibility(View.GONE);
 			changeData(mCityList);
 		}
 	}
