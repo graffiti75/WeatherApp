@@ -3,13 +3,16 @@
 	<!-- App -->
     <string name="app_name">Weather App</string>
     
+    <!-- Launcher Activity -->
+    <string name="activity_launcher__loading">Checking user current location&#8230;</string>
+    
     <!-- Main Activity -->
     <string name="activity_main__other_city_button">Other City</string>
     
     <string name="activity_main__loading_data">Loading data from </string>
     <string name="activity_main__remove_button">Remove</string>
 	<string name="activity_main__city_dialog_title">Which city do you want to add?</string>
-    <string name="activity_main__city_hint_edit_text">Type the city name here...</string>
+    <string name="activity_main__city_hint_edit_text">Type the city name here&#8230;</string>
     <string name="activity_main__empty_city_dialog_title">Error</string>
     <string name="activity_main__empty_city_dialog_message">This city doesn\'t exist!</string>
     
