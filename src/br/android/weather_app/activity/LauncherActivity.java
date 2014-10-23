@@ -42,7 +42,6 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	// Constants
 	//--------------------------------------------------
 	
-	public static final String USER_ALLOW_EXTRA = "user_allow_extra";
 	public static Integer DELAY = 2000;
 	
 	//--------------------------------------------------
@@ -62,7 +61,6 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	private Double mLongitude;
 	
 	// Flow.
-	private Boolean mActivityAlreadyAcessed = false;
 	private Boolean mUserAllowGps = false;
 	
 	//--------------------------------------------------
@@ -78,12 +76,6 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		// Avoid this Activity to be shown every time.
-		if (mActivityAlreadyAcessed) {
-			finish();
-		}
-		
 		mUserCityHandler.postDelayed(mUserCityHandlerChecker, DELAY);
 	}
 	
@@ -102,7 +94,13 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 		mMainActivityHandler.removeCallbacks(mMainActivityHandlerChecker);
 		mUserCityHandler.removeCallbacks(mUserCityHandlerChecker);
 	}
-
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		finish();
+	}
+	
 	//--------------------------------------------------
 	// API Methods
 	//--------------------------------------------------
@@ -190,7 +188,7 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 			if (addresses.size() > 0)  {
 				city = addresses.get(0).getSubAdminArea();
 			}
-			String message = getString(R.string.activity_launcher__current_city) + city + ".";
+			String message = getString(R.string.activity_launcher__current_city) + " " + city + ".";
 			Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 		} catch (IOException e) {                
 			e.printStackTrace();
@@ -226,15 +224,13 @@ public class LauncherActivity extends Activity implements Notifiable, LocationLi
 	 */
 	public void openMainActivity() {
 		// Closes the dialog and sets the flag of this activity.
-		mActivityAlreadyAcessed = true;
 		if (mDialog != null) {
 			mDialog.cancel();
 		}
 		
 		// Extras.
-		Bundle extras = new Bundle();
-		extras.putBoolean(USER_ALLOW_EXTRA, mUserAllowGps);
-		ActivityUtils.openActivity(this, MainActivity.class, extras);
+		ContentManager.getInstance().setUserAllowGps(mUserAllowGps);
+		ActivityUtils.openActivityForResult(this, MainActivity.class);
 	}
 	
 	//--------------------------------------------------

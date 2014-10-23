@@ -58,6 +58,7 @@ public class ContentManager {
 	private Boolean mDatabaseNeedsUpdate = false;
 	private Boolean mCityAddedOk = false;
 	private Boolean mCityRemovedOk = false;
+	private Boolean mUserAllowGps = false;
 	
 	private List<City> mCityList;
 	private WeatherResponse mWeatherResponse = null;
@@ -100,6 +101,28 @@ public class ContentManager {
 		mWeatherList = null;
 		mCurrentCondition = null;
 		mCityFromRequest = null;
+	}
+	
+	//----------------------------------------------
+	// Gps
+	//----------------------------------------------
+	
+	/**
+	 * Sets the status about the Gps.
+	 * 
+	 * @param allow
+	 */
+	public void setUserAllowGps(Boolean allow) {
+		mUserAllowGps = allow;
+	}
+	
+	/**
+	 * Gets the status about the Gps.
+	 * 
+	 * @return
+	 */
+	public Boolean getUserAllowGps() {
+		return mUserAllowGps;
 	}
 	
 	//----------------------------------------------

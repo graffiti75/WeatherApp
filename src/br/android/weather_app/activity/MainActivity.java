@@ -64,9 +64,6 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 
 	public void __________ATTRIBUTES__________() {};
 	
-	// GPS.
-	private Boolean mUserAllowGps;
-	
 	// Current Condition.
 	private LinearLayout mBackgroundLinearLayout;
 	private TextView mObservationTimeTextView;
@@ -104,7 +101,6 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		getExtras();
 		setCurrentDay();
 		setAdapter();
 		registerForContextMenu(mListView);
@@ -163,7 +159,8 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 	 * Sets the {@link CurrentCondition} day.
 	 */
 	public void setCurrentDay() {
-		if (mUserAllowGps) {
+		Boolean userAllowGps = ContentManager.getInstance().getUserAllowGps();
+		if (userAllowGps) {
 			CurrentCondition current = ContentManager.getInstance().getCurrentCondition();
 			setCurrentConditionLayout();
 			setCurrentConditionData(current);			
@@ -409,16 +406,6 @@ public class MainActivity extends SherlockActivity implements Notifiable, OnItem
 			}
 		}
 		return isInside;
-	}
-	
-	/**
-	 * Gets the extras.
-	 */
-	public void getExtras() {
-		Bundle extras = getIntent().getExtras(); 
-		if (extras != null) {
-			mUserAllowGps = extras.getBoolean(LauncherActivity.USER_ALLOW_EXTRA);
-		}
 	}
 	
 	/**

@@ -20,6 +20,9 @@ public class AppConfiguration {
 	
 	// The Token of the World WeatherResponse Online API.
 	public static final String TOKEN = "714be4de03b4ab70767d3335a6fa1651015c022f";
+	
+	// Controls the flow of the LauncherActivity.
+	public static final String ACTIVITY_ACESSED_EXTRA = "activity_acessed_extra";
 
 	//----------------------------------------------
 	// Database Settings
