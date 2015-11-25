@@ -1,0 +1,18 @@
+package com.example.rodrigo.weatherapp.tasks;
+
+/**
+ * Notifiable class.
+ * 
+ * @author Rodrigo Cericatto
+ * @since 17/10/2014
+ */
+public interface Notifiable {
+	
+	/**
+	 * Called when a task is finished.
+	 * 
+	 * @param type The type of the task.
+	 * @param result The OperationResult object.
+	 */
+	public void taskFinished(int type, Object result);
+}
