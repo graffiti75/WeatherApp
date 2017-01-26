@@ -1,6 +1,5 @@
 package com.example.rodrigo.weatherapp.view.activity;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -9,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
 import com.example.rodrigo.weatherapp.controller.helper.DialogHelper;
 import com.example.rodrigo.weatherapp.controller.utils.Utils;
@@ -95,7 +95,7 @@ public class WeatherActivity extends AppCompatActivity {
 	private void getExtras() {
 		Bundle extras = getIntent().getExtras(); 
 		if (extras != null) {
-			mCityName = extras.getString(MainActivity.CITY_NAME_EXTRA);
+			mCityName = extras.getString(AppConfiguration.CITY_NAME_EXTRA);
 		}
 	}
 
@@ -109,8 +109,7 @@ public class WeatherActivity extends AppCompatActivity {
 		// Check if there is Network connection.
 		if (Utils.checkConnection(this)) {
 			// Shows a loading dialog for the user.
-			String message = getString(R.string.activity_weather__loading_data) +
-					" " + mCityName + "...";
+			String message = getString(R.string.activity_weather__loading_data, mCityName);
 			ProgressDialog dialog = DialogHelper.showProgressDialog(this, message);
 
 			// Calls the API.
@@ -130,8 +129,7 @@ public class WeatherActivity extends AppCompatActivity {
 	// Callbacks
 	//--------------------------------------------------
 
-	public void setAdapter(WeatherResponse response, Dialog dialog) {
-		dialog.dismiss();
+	public void setAdapter(WeatherResponse response) {
 		mWeatherList = response.getData().getWeather();
 		mAdapter = new WeatherDayAdapter(this, mWeatherList);
 		mListView = (ListView)findViewById(R.id.id_activity_weather__listview);

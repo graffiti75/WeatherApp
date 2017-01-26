@@ -4,20 +4,17 @@
 
     <string name="app_name">Arena</string>
     <string name="content_authority">com.example.rodrigo.weatherapp.model.database.CityProvider</string>
+
     <string name="database_error">Database error.</string>
+    <string name="fetch_city_error">Error loading city \"%1$s\".</string>
 
     <string name="network_error_dialog_title">Error</string>
     <string name="network_error_dialog_message">There is no Network connection. Please try again later.</string>
     
-    <!-- Launcher Activity -->
-
-    <string name="activity_launcher__loading">Checking user current location&#8230;</string>
-    <string name="activity_launcher__current_city">User current city is</string>
-    
     <!-- Main Activity -->
 
     <string name="activity_main__other_city_button">Other City</string>
-    <string name="activity_main__loading_data">Loading data from </string>
+    <string name="activity_main__loading_data">Loading data from %1$s&#8230;</string>
 	
 	<string name="activity_main__city_dialog_title">Which city do you want to add?</string>
     <string name="activity_main__city_hint_edit_text">Type the city name here&#8230;</string>
@@ -28,7 +25,7 @@
     
     <!-- Weather Activity -->
 
-    <string name="activity_weather__loading_data">Refreshing data from </string>
+    <string name="activity_weather__loading_data">Refreshing data from %1$s&#8230;</string>
     
     <!-- Menu -->
 

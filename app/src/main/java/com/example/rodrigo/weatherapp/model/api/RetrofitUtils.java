@@ -1,11 +1,12 @@
 package com.example.rodrigo.weatherapp.model.api;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.rodrigo.weatherapp.AppConfiguration;
+import com.example.rodrigo.weatherapp.R;
 import com.example.rodrigo.weatherapp.controller.utils.Utils;
 import com.example.rodrigo.weatherapp.model.WeatherResponse;
 import com.example.rodrigo.weatherapp.view.activity.MainActivity;
@@ -41,25 +42,28 @@ public class RetrofitUtils {
         observable
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-//            .flatMap(cities -> Observable.from(cities))
             .subscribe(
-//                (city) -> Log.i(AppConfiguration.TAG, city.toString()),
-                (response) -> callAction(activity, response, cityName, dialog),
-                (error) -> Log.e(AppConfiguration.TAG, "Error: " + error.getMessage(), error),
-                () -> Log.i(AppConfiguration.TAG, "Finished!"));
+                (response) -> callAction(activity, response, cityName),
+                (error) -> {
+                        String message = activity.getString(R.string.fetch_city_error, cityName);
+                        Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
+                    },
+                    () -> dialog.dismiss()
+                );
     }
 
     private static void callAction(AppCompatActivity activity, WeatherResponse response,
-        String cityName, Dialog dialog) {
+        String cityName) {
         if (activity instanceof MainActivity) {
             String cityFromApi = response.getData().getRequest().get(0).getQuery();
             if (!Utils.isEmpty(cityFromApi)) {
                 MainActivity mainActivity = (MainActivity) activity;
-                mainActivity.citySearchedExists(cityName, dialog);
+                mainActivity.citySearchedExists(cityName);
             }
         } else if (activity instanceof WeatherActivity) {
             WeatherActivity weatherActivity = (WeatherActivity)activity;
-            weatherActivity.setAdapter(response, dialog);
+            weatherActivity.setAdapter(response);
         }
     }
 }

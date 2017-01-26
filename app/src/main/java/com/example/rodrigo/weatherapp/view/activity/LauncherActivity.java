@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
 import com.example.rodrigo.weatherapp.controller.utils.ActivityUtils;
 import com.example.rodrigo.weatherapp.model.City;
@@ -57,10 +58,9 @@ public class LauncherActivity extends Activity {
 		City city = DatabaseUtils.getCity(mActivity);
 		if (city == null) {
 			List<City> list = new ArrayList<>();
-			list.add(new City(1, "Dublin, Ireland"));
-			list.add(new City(2, "London, United Kingdom"));
-			list.add(new City(3, "New York, United States Of America"));
-			list.add(new City(4, "Barcelona, Spain"));
+			for (int i = 0; i < AppConfiguration.DEFAULT_DATA.length; i++) {
+				list.add(new City(i + 1, AppConfiguration.DEFAULT_DATA[i]));
+			}
 			Boolean success = DatabaseUtils.insertCityList(mActivity, list);
 			if (!success) {
 				Toast.makeText(mActivity, R.string.database_error, Toast.LENGTH_LONG);

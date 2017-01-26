@@ -1,5 +1,7 @@
 package com.example.rodrigo.weatherapp;
 
+import android.support.v4.app.NotificationCompatExtras;
+
 /**
  * AppConfiguration.java.
  * 
@@ -7,7 +9,18 @@ package com.example.rodrigo.weatherapp;
  * @since Jan 24, 2017
  */
 public class AppConfiguration {
-	
+
+	//----------------------------------------------
+	// Default Data
+	//----------------------------------------------
+
+	public static final String[] DEFAULT_DATA = new String[] {
+		"Dublin, Ireland",
+		"London, United Kingdom",
+		"New York, United States Of America",
+		"Barcelona, Spain"
+	};
+
 	//----------------------------------------------
 	// General Constants
 	//----------------------------------------------	
@@ -22,7 +35,13 @@ public class AppConfiguration {
 	
 	// The Token of the World WeatherResponse Online API.
 	public static final String KEY = "714be4de03b4ab70767d3335a6fa1651015c022f";
-	
+
+	//----------------------------------------------
+	// Extras
+	//----------------------------------------------
+
+	public static final String CITY_NAME_EXTRA = "city_name_extra";
+
 	//----------------------------------------------
 	// Logging
 	//----------------------------------------------
