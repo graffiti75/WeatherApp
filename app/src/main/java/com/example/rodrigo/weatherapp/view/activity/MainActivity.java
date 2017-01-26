@@ -1,7 +1,7 @@
 package com.example.rodrigo.weatherapp.view.activity;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.rodrigo.weatherapp.AppConfiguration;
@@ -24,11 +23,12 @@ import com.example.rodrigo.weatherapp.controller.tasks.AddCityAsyncTask;
 import com.example.rodrigo.weatherapp.controller.tasks.RemoveCityAsyncTask;
 import com.example.rodrigo.weatherapp.controller.utils.ActivityUtils;
 import com.example.rodrigo.weatherapp.controller.utils.Utils;
+import com.example.rodrigo.weatherapp.databinding.ActivityMainBinding;
+import com.example.rodrigo.weatherapp.model.City;
+import com.example.rodrigo.weatherapp.model.api.RetrofitUtils;
 import com.example.rodrigo.weatherapp.model.database.CityProvider;
 import com.example.rodrigo.weatherapp.model.database.DatabaseUtils;
 import com.example.rodrigo.weatherapp.view.adapter.CityAdapter;
-import com.example.rodrigo.weatherapp.model.api.RetrofitUtils;
-import com.example.rodrigo.weatherapp.model.City;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,16 +54,13 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 	// Context.
 	private MainActivity mActivity = MainActivity.this;
 
-	// Layout.
-	private Dialog mDialog = null;
-
 	// Rest.
 	private String mCityName;
 
 	// Adapter.
 	private List<City> mCityList = new ArrayList<>();
 	private CityAdapter mAdapter;
-	private ListView mListView;
+	private ActivityMainBinding mBinding;
 
 	//--------------------------------------------------
 	// Activity Life Cycle
@@ -72,10 +69,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
 		setAdapter();
-		registerForContextMenu(mListView);
+		registerForContextMenu(mBinding.idActivityMainListView);
 	}
 	
 	//--------------------------------------------------
@@ -125,10 +122,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
 	public void setAdapter() {
 		mCityList = DatabaseUtils.getCityList(mActivity);
-		mListView = (ListView) findViewById(R.id.id_activity_main__listview);
 		mAdapter = new CityAdapter(this, mCityList);
-		mListView.setAdapter(mAdapter);
-		mListView.setOnItemClickListener(this);
+		mBinding.idActivityMainListView.setAdapter(mAdapter);
+		mBinding.idActivityMainListView.setOnItemClickListener(this);
 	}
 	
 	public Boolean cityAlreadyInAdapter(String cityName) {
@@ -152,10 +148,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 		// Shows a dialog for the user.
 		mCityName = cityName;
 		String message = getString(R.string.activity_main__loading_data) + " " + mCityName + "...";
-		mDialog = DialogHelper.showProgressDialog(MainActivity.this, message);
+		Dialog dialog = DialogHelper.showProgressDialog(MainActivity.this, message);
 		
 		// Calls the API to check if the city exists.
-		RetrofitUtils.getWeather(mActivity, cityName);
+		RetrofitUtils.getWeather(mActivity, cityName, dialog);
 	}
 	
 	public void showNoConnectionDialog() {
@@ -241,9 +237,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 		}
 	}
 	
-	private void closeProgressDialog() {
-		if (mDialog != null) {
-			mDialog.cancel();
+	private void closeProgressDialog(Dialog dialog) {
+		if (dialog != null) {
+			dialog.cancel();
 		}
 	}
 
@@ -253,7 +249,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 		extras.putString(CITY_NAME_EXTRA, cityName);
 
 		// Transition.
-		closeProgressDialog();
 		ActivityUtils.openActivity(this, WeatherActivity.class, extras);
 		overridePendingTransition(R.anim.slide_up_from_outside, R.anim.slide_up_to_outside);
 	}
@@ -262,22 +257,18 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 	// Callback
 	//--------------------------------------------------
 
-	public void citySearchedExists(String cityName) {
+	public void citySearchedExists(String cityName, Dialog dialog) {
 		Boolean cityRepeated = cityAlreadyInAdapter(cityName);
 
 		// Checks if the city is already into the adapter.
 		if (cityRepeated) {
 			DialogHelper.showSimpleAlert(this, R.string.activity_main__repeated_city_dialog_title,
 					R.string.activity_main__repeated_city_dialog_message);
-			closeProgressDialog();
+			closeProgressDialog(dialog);
 		} else {
 			// Adds the city into the adapter.
 			addCityInDatabase(cityName);
-
-			// Closes the current dialog.
-			if (mDialog != null) {
-				mDialog.cancel();
-			}
+			closeProgressDialog(dialog);
 		}
 	}
 	
@@ -292,7 +283,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 			mCityName = mCityList.get(position).getCity();
 			String message = getString(R.string.activity_main__loading_data) +
 				" " + mCityName + "..."; 
-			mDialog = DialogHelper.showProgressDialog(MainActivity.this, message);
 			openWeatherActivity(mCityName);
 		} else {
 			showNoConnectionDialog();

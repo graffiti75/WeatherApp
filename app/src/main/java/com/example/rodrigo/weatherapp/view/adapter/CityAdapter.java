@@ -1,14 +1,14 @@
 package com.example.rodrigo.weatherapp.view.adapter;
 
 import android.app.Activity;
-import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
 
 import com.example.rodrigo.weatherapp.R;
+import com.example.rodrigo.weatherapp.databinding.CityAdapterBinding;
 import com.example.rodrigo.weatherapp.model.City;
 
 import java.util.List;
@@ -38,14 +38,6 @@ public class CityAdapter extends BaseAdapter {
 	}
 
 	//--------------------------------------------------
-	// View Holder
-	//--------------------------------------------------
-
-	public class ViewHolder {
-		private TextView cityTextView;
-	}
-	
-	//--------------------------------------------------
 	// Adapter Methods
 	//--------------------------------------------------
 	
@@ -67,31 +59,13 @@ public class CityAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		City city = getItem(position);
-		ViewHolder holder = new ViewHolder();
-		
+		CityAdapterBinding binding;
 		if (convertView == null) {
-			// Inflates the layout of the adapter.
-			LayoutInflater inflater = (LayoutInflater)mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflater.inflate(R.layout.city_adapter, parent, false);
-
-			// Initializes the ViewHolder.
-			holder.cityTextView = (TextView) convertView.findViewById(R.id.id_city_adapter__city_name_text_view);
-			
-			// Sets the View tag.
-			convertView.setTag(holder);
+			binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.city_adapter, parent, false);
 		} else {
-			holder = (ViewHolder)convertView.getTag();
+			binding = DataBindingUtil.bind(convertView);
 		}
-		setData(holder, city);
-
-		return convertView;
-	}
-	
-	//--------------------------------------------------
-	// Methods
-	//--------------------------------------------------
-	
-	public void setData(ViewHolder holder, City city) {
-		holder.cityTextView.setText(city.getCity());
+		binding.setCity(city);
+		return binding.getRoot();
 	}
 }

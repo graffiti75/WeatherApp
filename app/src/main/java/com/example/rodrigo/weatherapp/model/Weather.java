@@ -1,5 +1,6 @@
 package com.example.rodrigo.weatherapp.model;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -87,34 +88,89 @@ public class Weather {
 	//--------------------------------------------------
 
 	public String getDate() {
-		return date;
+		String parts[] = date.split("-");
+		String dayOfMonth = parts[2];
+		String currentDate = getCurrentWeekday(Integer.valueOf(dayOfMonth));
+
+		String posfixDate = date.replace("-", "/");
+		currentDate = currentDate + ", " + posfixDate;
+
+		return currentDate;
 	}
 
-	public Double getPrecipMM() {
-		return precipMM;
+	private String getCurrentWeekday(Integer adapterDayOfMonth) {
+		// Gets the current date.
+		Calendar calendar = Calendar.getInstance();
+		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+		// Compares the current date with the date from the adapter.
+		int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+		if (adapterDayOfMonth != dayOfMonth) {
+			int difference = adapterDayOfMonth - dayOfMonth;
+			dayOfWeek += difference;
+			if (dayOfWeek != 7) {
+				dayOfWeek = dayOfWeek % 7;
+			}
+		}
+
+		// Gets the proper day of week string.
+		String dayInString = getWeekdayString(dayOfWeek);
+		return dayInString;
 	}
 
-	public Integer getTempMaxC() {
-		return tempMaxC;
+	private String getWeekdayString(Integer dayOfWeek) {
+		String dayInString = "";
+		switch (dayOfWeek) {
+			case 2:
+				dayInString = "Monday";
+				break;
+			case 3:
+				dayInString = "Tuesday";
+				break;
+			case 4:
+				dayInString = "Wednesday";
+				break;
+			case 5:
+				dayInString = "Thursday";
+				break;
+			case 6:
+				dayInString = "Friday";
+				break;
+			case 7:
+				dayInString = "Saturday";
+				break;
+			case 1:
+				dayInString = "Sunday";
+				break;
+		}
+		return dayInString;
 	}
 
-	public Integer getTempMinC() {
-		return tempMinC;
+	public String getPrecipMM() {
+		return precipMM.toString() + " mm";
 	}
 
-	public List<WeatherDesc> getWeatherDesc() {
-		return weatherDesc;
+	public String getTempMaxC() {
+		return tempMaxC.toString() + "ºC";
 	}
 
-	public List<WeatherIconUrl> getWeatherIconUrl() {
-		return weatherIconUrl;
+	public String getTempMinC() {
+		return tempMinC.toString() + "ºC";
+	}
+
+	public String getWeatherDesc() {
+		return weatherDesc.get(0).getValue();
+	}
+
+	public String getWeatherIconUrl() {
+		return weatherIconUrl.get(0).getValue();
 	}
 
 	public String getWinddirection() {
 		return winddirection;
 	}
 
-	public Integer getWindspeedKmph() {
-		return windspeedKmph;
+	public String getWindspeedKmph() {
+		return windspeedKmph.toString() + " km/h";
 	}
 }

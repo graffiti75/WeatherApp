@@ -1,5 +1,6 @@
 package com.example.rodrigo.weatherapp.model.api;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,7 +26,7 @@ import rx.schedulers.Schedulers;
  */
 public class RetrofitUtils {
 
-    public static void getWeather(AppCompatActivity activity, String cityName, ProgressDialog dialog) {
+    public static void getWeather(AppCompatActivity activity, String cityName, Dialog dialog) {
         // Retrofit.
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(AppConfiguration.BASE_URL)
@@ -49,12 +50,12 @@ public class RetrofitUtils {
     }
 
     private static void callAction(AppCompatActivity activity, WeatherResponse response,
-        String cityName, ProgressDialog dialog) {
+        String cityName, Dialog dialog) {
         if (activity instanceof MainActivity) {
             String cityFromApi = response.getData().getRequest().get(0).getQuery();
             if (!Utils.isEmpty(cityFromApi)) {
                 MainActivity mainActivity = (MainActivity) activity;
-                mainActivity.citySearchedExists(cityName);
+                mainActivity.citySearchedExists(cityName, dialog);
             }
         } else if (activity instanceof WeatherActivity) {
             WeatherActivity weatherActivity = (WeatherActivity)activity;

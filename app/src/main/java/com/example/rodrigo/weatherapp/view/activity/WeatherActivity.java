@@ -1,5 +1,6 @@
 package com.example.rodrigo.weatherapp.view.activity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -129,7 +130,7 @@ public class WeatherActivity extends AppCompatActivity {
 	// Callbacks
 	//--------------------------------------------------
 
-	public void setAdapter(WeatherResponse response, ProgressDialog dialog) {
+	public void setAdapter(WeatherResponse response, Dialog dialog) {
 		dialog.dismiss();
 		mWeatherList = response.getData().getWeather();
 		mAdapter = new WeatherDayAdapter(this, mWeatherList);
