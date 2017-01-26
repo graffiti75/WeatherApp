@@ -1,25 +1,18 @@
 package com.example.rodrigo.weatherapp.model;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
 /**
  * City.java class.
  * 
  * @author Rodrigo Cericatto
- * @since 18/10/2014
+ * @since Jan 24, 2017
  */
-@DatabaseTable
-public class City extends Entity  {
+public class City {
 
 	//--------------------------------------------------
 	// Attributes
 	//--------------------------------------------------
 	
-	@DatabaseField(id = true)
 	private Integer id;
-	
-	@DatabaseField
 	private String city;
 	
 	//--------------------------------------------------
@@ -37,21 +30,22 @@ public class City extends Entity  {
 	//--------------------------------------------------
 	// To String
 	//--------------------------------------------------
-	
+
 	@Override
 	public String toString() {
-		return "City [id=" + id + ", city=" + city + "]";
+		return "City{" +
+			"id=" + id +
+			", city='" + city + '\'' +
+			'}';
 	}
 
 	//--------------------------------------------------
 	// Getters and Setters
 	//--------------------------------------------------
 	
-	@Override
 	public int getId() {
 		return id;
 	}
-	@Override
 	public void setId(int id) {
 		this.id = id;
 	}

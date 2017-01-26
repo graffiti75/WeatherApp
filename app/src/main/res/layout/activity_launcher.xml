@@ -4,12 +4,13 @@
     android:layout_height="match_parent"
     android:background="@color/color_white"
     android:gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
+        android:layout_margin="20dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_mtt_big" />
+        android:src="@drawable/ic_arena" />
 </LinearLayout>

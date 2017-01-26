@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<!-- App -->
-    <string name="app_name">Weather App</string>
-    
+	<!-- Application -->
+
+    <string name="app_name">Arena</string>
+    <string name="content_authority">com.example.rodrigo.weatherapp.model.database.CityProvider</string>
+    <string name="database_error">Database error.</string>
+
     <string name="network_error_dialog_title">Error</string>
     <string name="network_error_dialog_message">There is no Network connection. Please try again later.</string>
     
     <!-- Launcher Activity -->
+
     <string name="activity_launcher__loading">Checking user current location&#8230;</string>
     <string name="activity_launcher__current_city">User current city is</string>
     
     <!-- Main Activity -->
+
     <string name="activity_main__other_city_button">Other City</string>
     <string name="activity_main__loading_data">Loading data from </string>
 	
@@ -22,16 +27,19 @@
     <string name="activity_main__repeated_city_dialog_message">This city already exists into the adapter!</string>
     
     <!-- Weather Activity -->
+
     <string name="activity_weather__loading_data">Refreshing data from </string>
     
     <!-- Menu -->
+
     <string name="menu_delete">Delete the city?</string>
     <string name="menu_add">Add City</string>
     <string name="menu_refresh">Refresh</string>
     
     <!-- Dialog -->
+
     <string name="dialog_ok">OK</string>
-    <string name="dialog_cancel">Cancelar</string>
-    <string name="dialog_yes">Sim</string>
-    <string name="dialog_no">Não</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
 </resources>

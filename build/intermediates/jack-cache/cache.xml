@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/rodrigo/.gradle/caches/modules-2/files-2.1/com.j256.ormlite/ormlite-core/4.45/3db7b73aecea723803e10b068777cf09ed42d4be/ormlite-core-4.45.jar"
+        revision="25.0.0"
+        sha1="3db7b73aecea723803e10b068777cf09ed42d4be">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/ormlite-core-4.45-9bcefb02d01b71d2afbe5103d38aa8e57e4a2bd4.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/io.reactivex/rxandroid/1.2.1/jars/classes.jar"
+        revision="25.0.0"
+        sha1="5a2386ad9bfff580b206a7fe305cdccd00798159">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-dfda463ac5fa1e62ca09a83b91a260c773166fb6.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/support-v4/25.0.0/jars/classes.jar"
+        revision="25.0.0"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-fc5da4ca7101c73972c3fce1edfd7ab5045e934d.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.0/jars/classes.jar"
+        revision="25.0.0"
+        sha1="26674000177e45447a0326a6ad84612761199a13">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-4e2169548cf19e6be736f7f352f2a9af3e8eb8b3.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.0/jars/classes.jar"
+        revision="25.0.0"
+        sha1="76fb65a4b41ea42dab8a1310ed772a2420c96b52">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-a188afe112b5f9e1028d9169f3d02b85d676225b.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.0/jars/classes.jar"
+        revision="25.0.0"
+        sha1="07daa0b6e1d455c82a38422ffe287c18823d339a">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-57f1b18c3f6c546bbdfd15de6caa59ddecb6000f.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/retrofit/2.1.0/2de7cd8b95b7021b1d597f049bcb422055119f2c/retrofit-2.1.0.jar"
+        revision="25.0.0"
+        sha1="2de7cd8b95b7021b1d597f049bcb422055119f2c">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/retrofit-2.1.0-44c578846b58ffc49686828660e66d17cd5019ad.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/.gradle/caches/modules-2/files-2.1/com.nostra13.universalimageloader/universal-image-loader/1.9.4/dd9eeb557650c4ad7394df23f0f5cf27a7cfc697/universal-image-loader-1.9.4.jar"
+        revision="25.0.0"
+        sha1="dd9eeb557650c4ad7394df23f0f5cf27a7cfc697">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/universal-image-loader-1.9.4-4d89eb9f2c6100560779509282c76510739a8f4c.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.8.0/5ea7af56cc7c567ed9856d99efb30740e9b17ff/okio-1.8.0.jar"
+        revision="25.0.0"
+        sha1="05ea7af56cc7c567ed9856d99efb30740e9b17ff">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/okio-1.8.0-5187586bd0adcae6709feef037e1ba63171c0706.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/transition/25.0.0/jars/classes.jar"
+        revision="25.0.0"
+        sha1="0c6d948e6cb9ea6f535d175fb61ba2930719c0e9">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-6cf879109c3878a5741d542a356e3cf3cbfdc304.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.0/jars/libs/internal_impl-25.0.0.jar"
+        revision="25.0.0"
+        sha1="ee5faf4dee5b6a4364bf51587871047dde7c703a">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/internal_impl-25.0.0-3d8b76882d46b65a7f46293525f9cd58203e98fc.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/.gradle/caches/modules-2/files-2.1/io.reactivex/rxjava/1.1.6/2586312cd2b8a511e4c6236736f5a039fc0f2273/rxjava-1.1.6.jar"
+        revision="25.0.0"
+        sha1="2586312cd2b8a511e4c6236736f5a039fc0f2273">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/rxjava-1.1.6-db761477bab9f9e95455116c9d0817943d2e4ac5.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/25.0.0/support-annotations-25.0.0.jar"
+        revision="25.0.0"
+        sha1="a22d2cc94da87b254451fa8ed28afc30b4653773">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/support-annotations-25.0.0-ef56057b9090d385daa076e6026828f5856835d2.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Library/Android/sdk/platforms/android-25/optional/org.apache.http.legacy.jar"
+        revision="25.0.0"
+        sha1="5f0541a4298daa0590b22cfbde43f85e2a675545">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackRuntimeLibraries/debug/jars/8000/40/org.apache.http.legacy-3cd749919b04760eb438598ed8efb3e6305de5f9.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.3.0/2b802460eea20f8f2ad9c08c74e0f14718e88aa9/okhttp-3.3.0.jar"
+        revision="25.0.0"
+        sha1="2b802460eea20f8f2ad9c08c74e0f14718e88aa9">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/okhttp-3.3.0-0104ec73cd3386ef07ffdbfac727d360f6d3a110.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.7/751f548c85fa49f330cecbb1875893f971b33c4e/gson-2.7.jar"
+        revision="25.0.0"
+        sha1="751f548c85fa49f330cecbb1875893f971b33c4e">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/gson-2.7-a16eec683d149fd50349371d64e00aa8931307c0.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.0.0/jars/classes.jar"
+        revision="25.0.0"
+        sha1="d29714cc76b38157e3cbd034c66e1ec808eb4c19">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-4dc62aa779973cbbcd5866421e65158bf2e7ac3f.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/.gradle/caches/modules-2/files-2.1/com.j256.ormlite/ormlite-android/4.45/8ff8c21e8d0162333559f35cafd6a2238a33e5ba/ormlite-android-4.45.jar"
+        revision="25.0.0"
+        sha1="8ff8c21e8d0162333559f35cafd6a2238a33e5ba">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/ormlite-android-4.45-89f570e482802531bb63beb5341dd1e2b008c279.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.0/jars/classes.jar"
+        revision="25.0.0"
+        sha1="75b1f366ff0bbc78f8b1f7cf0dc82e7c53afef6a">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-88f7f374deeca34569587a7206ce58aa8d85464d.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/adapter-rxjava/2.1.0/693eddc23e87ab13f9cf5001707ce8e7e1d1ff01/adapter-rxjava-2.1.0.jar"
+        revision="25.0.0"
+        sha1="693eddc23e87ab13f9cf5001707ce8e7e1d1ff01">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/adapter-rxjava-2.1.0-fda71b15a5e13f96468940f6ad3156e9b683d173.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.0/jars/classes.jar"
+        revision="25.0.0"
+        sha1="4ccbcda5c72027c7f7c14be9ff8640d9cb0d8da0">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-62899c7671bd41069092f8f9701f92c7cc0ce7c3.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.0/jars/libs/internal_impl-25.0.0.jar"
+        revision="25.0.0"
+        sha1="e5343c9d19cb19ff55f6b268c7f3fe8c9d224f6f">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/internal_impl-25.0.0-4d7db08882e8bf3967a650816f0aa134569be460.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/design/25.0.0/jars/classes.jar"
+        revision="25.0.0"
+        sha1="26384be22ddc74cfe197ebda9edbc7d1fd8bd537">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-a4bcdaf7bcb7364f1255a07d354ec442c94c67d6.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.0/jars/libs/internal_impl-25.0.0.jar"
+        revision="25.0.0"
+        sha1="665d21a8a069c96b4d9e8b434f5096d865b4e261">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/internal_impl-25.0.0-f5a76d613c958ae7d1a1faf7bd967c766eb6c739.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.0.0/jars/classes.jar"
+        revision="25.0.0"
+        sha1="53a420cd4f49274db6bd43475f8006ba67ef6bbd">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-5d4a0e5726f6ca75d900448810ce7405d75539c4.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.jakewharton.rxbinding/rxbinding/0.4.0/jars/classes.jar"
+        revision="25.0.0"
+        sha1="ffc09f4e5bdebe068e5101f587dadc42b60fbfe4">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-59bf14c1a59dffe7d3bf8bb81a9a9fb7edae1303.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/25.0.0/jars/classes.jar"
+        revision="25.0.0"
+        sha1="5e497d60f0cb6ce87c458ac5420a46d0fed49bd0">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-c45808b2c2a17e603a8e4d5deebbba78e9726ad7.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.0/jars/libs/internal_impl-25.0.0.jar"
+        revision="25.0.0"
+        sha1="3b61a70884adaf0be3fc06c70c801e3e6df13133">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/internal_impl-25.0.0-86fc37e621ab1b8d04d482fb0d4ba5982b84f374.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/converter-gson/2.1.0/aa557d71ead91cbf26e0c316a0f593d168303309/converter-gson-2.1.0.jar"
+        revision="25.0.0"
+        sha1="aa557d71ead91cbf26e0c316a0f593d168303309">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/converter-gson-2.1.0-2580c02557707b117e0c5bc9c6d96a13aa99bb65.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.0/jars/libs/internal_impl-25.0.0.jar"
+        revision="25.0.0"
+        sha1="f2e3b9bc1ec25f652e8007ce7774c991e38f6a00">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/internal_impl-25.0.0-e830f7cec513df1c3840f9d30c9c6724c177bbfc.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/jars/classes.jar"
+        revision="25.0.0"
+        sha1="8bc45ce1f63d1a391fd38b32a201be5a42f9c95d">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackPackagedLibraries/debug/jars/8000/1f/classes-7a5f3cd775d48efab2cbae8fe1fa4e4890eb2602.jar" />
+    </item>
+    <item
+        jar="/Users/rodrigo/Library/Android/sdk/platforms/android-25/android.jar"
+        revision="25.0.0"
+        sha1="712a0312fe844a21a1b3812fa960c363a1578984">
+        <dex dex="/Users/rodrigo/Downloads/Arena/WeatherApp/app/build/intermediates/transforms/preJackRuntimeLibraries/debug/jars/8000/40/android-df2735e90ad48c15886a83e7fc027e5e4c25a9e2.jar" />
+    </item>
+
+</items>

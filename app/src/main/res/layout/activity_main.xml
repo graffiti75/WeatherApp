@@ -3,10 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_black"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <include layout="@layout/current_condition_adapter"/>
-    
     <ListView
         android:id="@+id/id_activity_main__listview"
         android:layout_width="match_parent"
