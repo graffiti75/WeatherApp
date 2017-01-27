@@ -13,11 +13,11 @@ import android.view.MenuItem;
 import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
 import com.example.rodrigo.weatherapp.controller.helper.DialogHelper;
+import com.example.rodrigo.weatherapp.controller.utils.ReactiveUtils;
 import com.example.rodrigo.weatherapp.controller.utils.Utils;
 import com.example.rodrigo.weatherapp.databinding.ActivityWeatherBinding;
 import com.example.rodrigo.weatherapp.model.Weather;
 import com.example.rodrigo.weatherapp.model.WeatherResponse;
-import com.example.rodrigo.weatherapp.model.api.RetrofitUtils;
 import com.example.rodrigo.weatherapp.view.adapter.WeatherDayAdapter;
 
 import java.util.List;
@@ -116,7 +116,7 @@ public class WeatherActivity extends AppCompatActivity {
 			ProgressDialog dialog = DialogHelper.showProgressDialog(mActivity, message);
 
 			// Calls the API.
-			RetrofitUtils.getWeather(mActivity, mCityName, dialog);
+			ReactiveUtils.getWeather(mActivity, mCityName, dialog);
 		} else {
 			showNoConnectionDialog();
 		}
@@ -124,7 +124,7 @@ public class WeatherActivity extends AppCompatActivity {
 
 	private void showNoConnectionDialog() {
 		DialogHelper.showSimpleAlert(mActivity, R.string.network_error_dialog_title,
-				R.string.network_error_dialog_message, (dialog, which) -> dialog.cancel()
+			R.string.network_error_dialog_message, (dialog, which) -> dialog.cancel()
 		);
 	}
 	

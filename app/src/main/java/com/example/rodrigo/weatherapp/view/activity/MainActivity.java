@@ -1,6 +1,7 @@
 package com.example.rodrigo.weatherapp.view.activity;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,15 +19,11 @@ import android.widget.Toast;
 import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
 import com.example.rodrigo.weatherapp.controller.helper.DialogHelper;
-import com.example.rodrigo.weatherapp.controller.tasks.AddCityAsyncTask;
-import com.example.rodrigo.weatherapp.controller.tasks.RemoveCityAsyncTask;
 import com.example.rodrigo.weatherapp.controller.utils.ActivityUtils;
+import com.example.rodrigo.weatherapp.controller.utils.ReactiveUtils;
 import com.example.rodrigo.weatherapp.controller.utils.Utils;
 import com.example.rodrigo.weatherapp.databinding.ActivityMainBinding;
 import com.example.rodrigo.weatherapp.model.City;
-import com.example.rodrigo.weatherapp.model.api.RetrofitUtils;
-import com.example.rodrigo.weatherapp.model.database.CityProvider;
-import com.example.rodrigo.weatherapp.model.database.DatabaseUtils;
 import com.example.rodrigo.weatherapp.view.adapter.CityAdapter;
 
 import java.util.ArrayList;
@@ -123,14 +120,9 @@ public class MainActivity extends AppCompatActivity {
 	//--------------------------------------------------
 
 	public void setAdapter() {
-		mCityList = DatabaseUtils.getCityList(mActivity);
-		mAdapter = new CityAdapter(mActivity, mCityList);
-
-		LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
-		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-		mBinding.idActivityMainRecyclerView.setLayoutManager(layoutManager);
-		mBinding.idActivityMainRecyclerView.setItemAnimator(new DefaultItemAnimator());
-		mBinding.idActivityMainRecyclerView.setAdapter(mAdapter);
+		String message = getString(R.string.reading_from_database);
+		ProgressDialog dialog = DialogHelper.showProgressDialog(mActivity, message);
+		ReactiveUtils.getCityList(mActivity, false, dialog);
 	}
 	
 	public Boolean cityAlreadyInAdapter(String cityName) {
@@ -155,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 		String message = getString(R.string.activity_main__loading_data, mCityName);
 		Dialog dialog = DialogHelper.showProgressDialog(mActivity, message);
 		
-		RetrofitUtils.getWeather(mActivity, cityName, dialog);
+		ReactiveUtils.getWeather(mActivity, cityName, dialog);
 	}
 	
 	public void showNoConnectionDialog() {
@@ -174,48 +166,24 @@ public class MainActivity extends AppCompatActivity {
 		List<City> list = new ArrayList<>();
 		list.add(newCity);
 
-		AddCityAsyncTask task = new AddCityAsyncTask(mActivity, list) {
-			@Override
-			protected void onPostExecute(Boolean result) {
-				addCityIntoAdapter(newCity, result);
-			}
-		};
-		task.execute();
-	}
-	
-	private void addCityIntoAdapter(City newCity, Boolean result) {
-		if (result) {
-			mCityList.add(newCity);
-			mAdapter.notifyDataSetChanged();
-		}
+		String message = getString(R.string.inserting_in_database);
+		ProgressDialog dialog = DialogHelper.showProgressDialog(mActivity, message);
+		ReactiveUtils.insertCityList(mActivity, list, newCity, dialog);
 	}
 
 	private void removeCityFromDatabase(Integer position) {
 		City city = mCityList.get(position);
-		RemoveCityAsyncTask task = new RemoveCityAsyncTask(mActivity, city) {
-			@Override
-			protected void onPostExecute(Boolean result) {
-				if (result) {
-					updateCityAdapter();
-				} else {
-					Toast.makeText(mActivity, R.string.database_error, Toast.LENGTH_LONG);
-				}
-			}
-		};
-		task.execute();
+
+		String message = getString(R.string.removing_from_database);
+		ProgressDialog dialog = DialogHelper.showProgressDialog(mActivity, message);
+		ReactiveUtils.removeCity(mActivity, city, dialog);
 	}
 	
 	private void updateCityAdapter() {
 		mCityList.clear();
-		CityProvider database = DatabaseUtils.openDatabase(mActivity);
-		List<City> list = DatabaseUtils.getCityList(mActivity);
-		if (list == null || list.size() <= 0) {
-			Toast.makeText(mActivity, R.string.database_error, Toast.LENGTH_LONG);
-		} else {
-			mCityList.addAll(list);
-			mAdapter.notifyDataSetChanged();
-		}
-		DatabaseUtils.closeDatabase(database);
+		String message = getString(R.string.reading_from_database);
+		ProgressDialog dialog = DialogHelper.showProgressDialog(mActivity, message);
+		ReactiveUtils.getCityList(mActivity, true, dialog);
 	}
 	
 	//--------------------------------------------------
@@ -260,6 +228,40 @@ public class MainActivity extends AppCompatActivity {
 			openWeatherActivity(mCityName);
 		} else {
 			showNoConnectionDialog();
+		}
+	}
+
+	public void changeAdapter(List<City> list, Boolean updateAdapter) {
+		if (updateAdapter) {
+			if (list == null || list.size() <= 0) {
+				Toast.makeText(mActivity, R.string.database_error, Toast.LENGTH_LONG);
+			} else {
+				mCityList.addAll(list);
+				mAdapter.notifyDataSetChanged();
+			}
+		} else {
+			mAdapter = new CityAdapter(mActivity, list);
+			LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
+			layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+			mBinding.idActivityMainRecyclerView.setLayoutManager(layoutManager);
+			mBinding.idActivityMainRecyclerView.setItemAnimator(new DefaultItemAnimator());
+			mBinding.idActivityMainRecyclerView.setAdapter(mAdapter);
+		}
+		mCityList = list;
+	}
+
+	public void addCityIntoAdapter(City newCity, Boolean result) {
+		if (result) {
+			mCityList.add(newCity);
+			mAdapter.notifyDataSetChanged();
+		}
+	}
+
+	public void removeCityFromAdapter(Boolean result) {
+		if (result) {
+			updateCityAdapter();
+		} else {
+			Toast.makeText(mActivity, R.string.database_error, Toast.LENGTH_LONG);
 		}
 	}
 }
