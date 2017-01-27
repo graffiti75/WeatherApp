@@ -52,8 +52,6 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityAdapterVie
 	public void onBindViewHolder(CityAdapterViewHolder holder, int position) {
 		City item = mItems.get(position);
 		holder.binding.setCity(item);
-		holder.binding.idCityAdapterCityNameTextView.setOnClickListener(
-			view -> mActivity.onItemClick(position));
 	}
 
 	@Override

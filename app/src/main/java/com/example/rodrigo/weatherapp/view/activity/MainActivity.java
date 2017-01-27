@@ -2,18 +2,15 @@ package com.example.rodrigo.weatherapp.view.activity;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Toast;
 
 import com.example.rodrigo.weatherapp.AppConfiguration;
@@ -25,6 +22,8 @@ import com.example.rodrigo.weatherapp.controller.utils.dialog.DialogUtils;
 import com.example.rodrigo.weatherapp.databinding.ActivityMainBinding;
 import com.example.rodrigo.weatherapp.model.City;
 import com.example.rodrigo.weatherapp.view.adapter.CityAdapter;
+import com.example.rodrigo.weatherapp.view.listeners.RecyclerTouchListener;
+import com.example.rodrigo.weatherapp.view.listeners.RecyclerViewListeners;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
 		mBinding = DataBindingUtil.setContentView(mActivity, R.layout.activity_main);
 
 		setAdapter();
-		registerForContextMenu(mBinding.idActivityMainRecyclerView);
 	}
 	
 	//--------------------------------------------------
@@ -94,32 +92,13 @@ public class MainActivity extends AppCompatActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-   @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_context_activity_main, menu);
-    }
-    
-	@Override
-    public boolean onContextItemSelected(android.view.MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-	    Integer position = info.position;
-		
-        switch (item.getItemId()) {
-            case R.id.id_menu_delete:
-            	removeCityFromDatabase(position);
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
-	    
 	//--------------------------------------------------
-	// Adapter Methods
+	// Methods
 	//--------------------------------------------------
 
 	public void setAdapter() {
+		mBinding.idActivityMainRecyclerView.addOnItemTouchListener(setRecyclerViewListener());
+
 		String message = getString(R.string.reading_from_database);
 		ProgressDialog dialog = DialogUtils.showProgressDialog(mActivity, message);
 		ReactiveUtils.getCityList(mActivity, false, dialog);
@@ -138,10 +117,6 @@ public class MainActivity extends AppCompatActivity {
 		return isInside;
 	}
 
-	//--------------------------------------------------
-	// Other Methods
-	//--------------------------------------------------
-	
 	public void getCityInfoFromApi(String cityName) {
 		mCityName = cityName;
 		String message = getString(R.string.activity_main__loading_data, mCityName);
@@ -163,11 +138,22 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void removeCityFromDatabase(Integer position) {
-		City city = mCityList.get(position);
+		DialogUtils.showConfirmDialog(mActivity, 0, R.string.activity_main__remove_city_dialog_title,
+			confirmListener(position), cancelListener());
+	}
 
-		String message = getString(R.string.removing_from_database);
-		ProgressDialog dialog = DialogUtils.showProgressDialog(mActivity, message);
-		ReactiveUtils.removeCity(mActivity, city, dialog);
+	private DialogInterface.OnClickListener confirmListener(final int position) {
+		return (context, which) -> {
+            City city = mCityList.get(position);
+
+            String message = MainActivity.this.getString(R.string.removing_from_database);
+            ProgressDialog dialog = DialogUtils.showProgressDialog(mActivity, message);
+            ReactiveUtils.removeCity(mActivity, city, dialog);
+        };
+	}
+
+	private DialogInterface.OnClickListener cancelListener() {
+		return (context, which) -> context.dismiss();
 	}
 	
 	private void updateCityAdapter() {
@@ -180,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 	private void getCityDialog() {
 		if (Utils.checkConnection(mActivity)) {
 			// Gets the city from the dialog.
-			DialogUtils.showCustomDialog(mActivity, R.layout.custom_dialog, R.string.activity_main__city_dialog_title,
+			DialogUtils.showCustomDialog(mActivity, R.layout.custom_dialog, R.string.activity_main__add_city_dialog_title,
 				(context, city) -> getCityInfoFromApi(city)
 			);
 		} else {
@@ -195,6 +181,26 @@ public class MainActivity extends AppCompatActivity {
 		overridePendingTransition(R.anim.slide_up_from_outside, R.anim.slide_up_to_outside);
 	}
 
+	private RecyclerTouchListener setRecyclerViewListener() {
+		return new RecyclerTouchListener(mActivity, mBinding.idActivityMainRecyclerView,
+			new RecyclerViewListeners() {
+			@Override
+			public void onClick(View view, final int position) {
+				if (Utils.checkConnection(mActivity)) {
+					mCityName = mCityList.get(position).getCity();
+					openWeatherActivity(mCityName);
+				} else {
+					DialogUtils.showNoConnectionDialog(mActivity);
+				}
+			}
+
+			@Override
+			public void onLongClick(View view, int position) {
+				removeCityFromDatabase(position);
+			}
+		});
+	}
+
 	//--------------------------------------------------
 	// Callback
 	//--------------------------------------------------
@@ -206,15 +212,6 @@ public class MainActivity extends AppCompatActivity {
 				R.string.activity_main__repeated_city_dialog_message);
 		} else {
 			addCityInDatabase(cityName);
-		}
-	}
-
-	public void onItemClick(int position) {
-		if (Utils.checkConnection(mActivity)) {
-			mCityName = mCityList.get(position).getCity();
-			openWeatherActivity(mCityName);
-		} else {
-			DialogUtils.showNoConnectionDialog(mActivity);
 		}
 	}
 
