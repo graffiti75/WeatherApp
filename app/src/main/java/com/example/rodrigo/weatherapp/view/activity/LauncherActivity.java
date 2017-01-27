@@ -1,13 +1,12 @@
 package com.example.rodrigo.weatherapp.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
-import com.example.rodrigo.weatherapp.controller.utils.ActivityUtils;
-import com.example.rodrigo.weatherapp.controller.utils.Utils;
+import com.example.rodrigo.weatherapp.presenter.utils.ActivityUtils;
 import com.example.rodrigo.weatherapp.model.City;
 import com.example.rodrigo.weatherapp.model.database.CityProvider;
 import com.example.rodrigo.weatherapp.model.database.DatabaseUtils;
@@ -21,7 +20,7 @@ import java.util.List;
  * @author Rodrigo Cericatto
  * @since Jan 25, 2017
  */
-public class LauncherActivity extends AppCompatActivity {
+public class LauncherActivity extends BaseActivity {
 
 	//--------------------------------------------------
 	// Attributes
@@ -31,16 +30,25 @@ public class LauncherActivity extends AppCompatActivity {
 	private LauncherActivity mActivity = LauncherActivity.this;
 
 	//--------------------------------------------------
-	// Activity Life Cycle
+	// Base Activity
 	//--------------------------------------------------
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_launcher);
 
-		Utils.initToolbar(mActivity, false, 0);
+	@Override
+	protected int getContentView() {
+		return R.layout.activity_launcher;
+	}
+
+	@Override
+	protected void onViewReady(Bundle savedInstanceState, Intent intent) {
+		super.onViewReady(savedInstanceState, intent);
+		setContentView(getContentView());
+
+		showBackArrow(mActivity, false, "");
 		getDatabaseInfo();
+	}
+
+	@Override
+	protected void resolveDaggerDependency() {
 	}
 
 	@Override

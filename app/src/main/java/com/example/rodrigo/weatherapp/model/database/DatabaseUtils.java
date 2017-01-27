@@ -6,7 +6,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.example.rodrigo.weatherapp.controller.utils.Utils;
+import com.example.rodrigo.weatherapp.AppConfiguration;
+import com.example.rodrigo.weatherapp.presenter.utils.Utils;
 import com.example.rodrigo.weatherapp.model.City;
 
 import java.util.ArrayList;
@@ -28,9 +29,9 @@ public class DatabaseUtils {
         ContentValues values = new ContentValues();
         Uri uri = null;
         for (City item : list) {
-            values.put(CityProvider.ID, item.getId());
-            values.put(CityProvider.CITY_NAME, item.getCity());
-            uri = context.getContentResolver().insert(CityProvider.CONTENT_URI, values);
+            values.put(AppConfiguration.ID, item.getId());
+            values.put(AppConfiguration.CITY_NAME, item.getCity());
+            uri = context.getContentResolver().insert(AppConfiguration.CONTENT_URI, values);
         }
 
         Boolean result = false;
@@ -41,7 +42,7 @@ public class DatabaseUtils {
     }
 
     public static Boolean deleteCity(Context context, Integer id) {
-        Uri uri = Uri.parse(CityProvider.CONTENT_PROVIDER_URL);
+        Uri uri = Uri.parse(AppConfiguration.CONTENT_PROVIDER_URL);
         Boolean result = false;
         String where = "id = " + id;
         int rowsAffected = context.getContentResolver().delete(uri, where, null);
@@ -51,10 +52,10 @@ public class DatabaseUtils {
     }
 
     public static City getCity(Context context, Integer _id) {
-        Uri cities = Uri.parse(CityProvider.CONTENT_PROVIDER_URL);
+        Uri cities = Uri.parse(AppConfiguration.CONTENT_PROVIDER_URL);
         City city = null;
         Cursor cursor = context.getContentResolver().query(cities, null,
-            CityProvider.ID + " = " + _id, null, null);
+            AppConfiguration.ID + " = " + _id, null, null);
         if (cursor != null) {
             if (!cursor.moveToFirst()) {
                 city = null;
@@ -68,7 +69,7 @@ public class DatabaseUtils {
     }
 
     public static List<City> getCityList(Context context) {
-        Uri cities = Uri.parse(CityProvider.CONTENT_PROVIDER_URL);
+        Uri cities = Uri.parse(AppConfiguration.CONTENT_PROVIDER_URL);
         List<City> list = new ArrayList<>();
         Cursor cursor = context.getContentResolver().query(cities, null, null, null, null);
         if (cursor != null) {
@@ -89,8 +90,8 @@ public class DatabaseUtils {
 
     private static City getCityFromCursor(Cursor cursor) {
         City city = new City();
-        Integer id = cursor.getInt(cursor.getColumnIndex(CityProvider.ID));
-        String cityName = cursor.getString(cursor.getColumnIndex(CityProvider.CITY_NAME));
+        Integer id = cursor.getInt(cursor.getColumnIndex(AppConfiguration.ID));
+        String cityName = cursor.getString(cursor.getColumnIndex(AppConfiguration.CITY_NAME));
 
         city.setId(id);
         city.setCity(cityName);

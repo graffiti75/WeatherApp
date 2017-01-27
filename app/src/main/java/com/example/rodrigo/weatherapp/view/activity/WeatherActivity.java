@@ -1,27 +1,23 @@
 package com.example.rodrigo.weatherapp.view.activity;
 
-import android.app.ProgressDialog;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
-import com.example.rodrigo.weatherapp.controller.utils.Navigation;
-import com.example.rodrigo.weatherapp.controller.utils.ReactiveUtils;
-import com.example.rodrigo.weatherapp.controller.utils.Utils;
-import com.example.rodrigo.weatherapp.controller.utils.dialog.DialogUtils;
+import com.example.rodrigo.weatherapp.presenter.di.components.DaggerWeatherComponent;
+import com.example.rodrigo.weatherapp.presenter.di.module.WeatherModule;
+import com.example.rodrigo.weatherapp.presenter.utils.NavigationUtils;
 import com.example.rodrigo.weatherapp.databinding.ActivityWeatherBinding;
 import com.example.rodrigo.weatherapp.model.Weather;
 import com.example.rodrigo.weatherapp.model.WeatherResponse;
-import com.example.rodrigo.weatherapp.view.adapter.WeatherDayAdapter;
+import com.example.rodrigo.weatherapp.presenter.WeatherPresenter;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * WeatherActivity.java.
@@ -29,7 +25,7 @@ import java.util.List;
  * @author Rodrigo Cericatto
  * @since Jan 26, 2017
  */
-public class WeatherActivity extends AppCompatActivity {
+public class WeatherActivity extends BaseActivity {
 	
 	//--------------------------------------------------
 	// Attributes
@@ -42,28 +38,42 @@ public class WeatherActivity extends AppCompatActivity {
 	private String mCityName;
 
 	// Adapter.
-	private WeatherDayAdapter mAdapter;
 	private List<Weather> mWeatherList;
 	private ActivityWeatherBinding mBinding;
-	
-	//--------------------------------------------------
-	// Activity Life Cycle
-	//--------------------------------------------------
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mBinding = DataBindingUtil.setContentView(mActivity, R.layout.activity_weather);
 
-		getExtras();
-		setActionBar();
-		refreshList();
+	@Inject
+	protected WeatherPresenter mPresenter;
+
+	//--------------------------------------------------
+	// Base Activity
+	//--------------------------------------------------
+
+	@Override
+	protected int getContentView() {
+		return R.layout.activity_weather;
+	}
+
+	@Override
+	protected void onViewReady(Bundle savedInstanceState, Intent intent) {
+		super.onViewReady(savedInstanceState, intent);
+		mBinding = DataBindingUtil.setContentView(mActivity, getContentView());
+
+		mPresenter.getExtras();
+		mPresenter.refreshList();
+	}
+
+	@Override
+	protected void resolveDaggerDependency() {
+		DaggerWeatherComponent.builder()
+			.applicationComponent(getApplicationComponent())
+			.weatherModule(new WeatherModule(this))
+			.build().inject(this);
 	}
 
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		Navigation.animate(mActivity, Navigation.Animation.BACK);
+		NavigationUtils.animate(mActivity, NavigationUtils.Animation.BACK);
 	}
 
 	//--------------------------------------------------
@@ -83,56 +93,33 @@ public class WeatherActivity extends AppCompatActivity {
 				onBackPressed();
 				return true;
 			case R.id.id_menu_refresh:
-				refreshList();
+				mPresenter.refreshList();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
 	//--------------------------------------------------
-	// Methods
-	//--------------------------------------------------
-
-	private void getExtras() {
-		Bundle extras = getIntent().getExtras(); 
-		if (extras != null) {
-			mCityName = extras.getString(AppConfiguration.CITY_NAME_EXTRA);
-			Utils.initToolbar(mActivity, true, mCityName);
-		}
-	}
-
-	private void setActionBar() {
-		ActionBar action = getSupportActionBar();
-		action.setTitle(mCityName);
-		action.setDisplayHomeAsUpEnabled(true);
-	}
-
-	private void refreshList() {
-		// Check if there is Network connection.
-		if (Utils.checkConnection(mActivity)) {
-			// Shows a loading dialog for the user.
-			String message = getString(R.string.activity_weather__loading_data, mCityName);
-			ProgressDialog dialog = DialogUtils.showProgressDialog(mActivity, message);
-
-			// Calls the API.
-			ReactiveUtils.getWeather(mActivity, mCityName, dialog);
-		} else {
-			DialogUtils.showNoConnectionDialog(mActivity);
-		}
-	}
-
-	//--------------------------------------------------
 	// Callbacks
 	//--------------------------------------------------
 
 	public void setAdapter(WeatherResponse response) {
-		mWeatherList = response.getData().getWeather();
-		mAdapter = new WeatherDayAdapter(mWeatherList);
+		mPresenter.setAdapter(response, mBinding);
+	}
 
-		LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
-		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-		mBinding.idActivityWeatherRecyclerView.setLayoutManager(layoutManager);
-		mBinding.idActivityWeatherRecyclerView.setItemAnimator(new DefaultItemAnimator());
-		mBinding.idActivityWeatherRecyclerView.setAdapter(mAdapter);
+	public String getCityName() {
+		return mCityName;
+	}
+
+	public void setCityName(String cityName) {
+		mCityName = cityName;
+	}
+
+	public List<Weather> getWeatherList() {
+		return mWeatherList;
+	}
+
+	public void setWeatherList(List<Weather> list) {
+		mWeatherList = list;
 	}
 }
