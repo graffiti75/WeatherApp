@@ -18,9 +18,6 @@ import com.example.rodrigo.weatherapp.view.activity.WeatherActivity;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -38,17 +35,8 @@ public class ReactiveUtils {
 	// Retrofit
 	//--------------------------------------------------
 
-	public static void getWeather(AppCompatActivity activity, String cityName, Dialog dialog) {
-		// Retrofit.
-		Retrofit retrofit = new Retrofit.Builder()
-			.baseUrl(AppConfiguration.BASE_URL)
-			.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-			.addConverterFactory(GsonConverterFactory.create())
-			.build();
-		WeatherService service = retrofit.create(WeatherService.class);
-
-		// Rx.
-		Observable<WeatherResponse> observable = service.getWeather(cityName, AppConfiguration.FORMAT,
+	public static void getWeather(AppCompatActivity activity, WeatherService apiService, String cityName, Dialog dialog) {
+		Observable<WeatherResponse> observable = apiService.getWeather(cityName, AppConfiguration.FORMAT,
 				AppConfiguration.NUMBER_OF_DAYS, AppConfiguration.KEY);
 		observable
 			.compose(setupSchedulers())

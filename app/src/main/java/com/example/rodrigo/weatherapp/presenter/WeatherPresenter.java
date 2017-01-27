@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 
 import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
+import com.example.rodrigo.weatherapp.model.api.WeatherService;
 import com.example.rodrigo.weatherapp.presenter.utils.ReactiveUtils;
 import com.example.rodrigo.weatherapp.presenter.utils.Utils;
 import com.example.rodrigo.weatherapp.presenter.utils.dialog.DialogUtils;
@@ -30,6 +31,9 @@ public class WeatherPresenter {
     //--------------------------------------------------
 
     private WeatherActivity mActivity;
+
+    @Inject
+    protected WeatherService mApiService;
 
     //--------------------------------------------------
     // Constructor
@@ -60,7 +64,7 @@ public class WeatherPresenter {
             ProgressDialog dialog = DialogUtils.showProgressDialog(mActivity, message);
 
             // Calls the API.
-            ReactiveUtils.getWeather(mActivity, mActivity.getCityName(), dialog);
+            ReactiveUtils.getWeather(mActivity, mApiService, mActivity.getCityName(), dialog);
         } else {
             DialogUtils.showNoConnectionDialog(mActivity);
         }

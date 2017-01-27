@@ -12,6 +12,7 @@ import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
 import com.example.rodrigo.weatherapp.databinding.ActivityMainBinding;
 import com.example.rodrigo.weatherapp.model.City;
+import com.example.rodrigo.weatherapp.model.api.WeatherService;
 import com.example.rodrigo.weatherapp.presenter.utils.ActivityUtils;
 import com.example.rodrigo.weatherapp.presenter.utils.ReactiveUtils;
 import com.example.rodrigo.weatherapp.presenter.utils.Utils;
@@ -42,6 +43,9 @@ public class MainPresenter {
 
     private MainActivity mActivity;
 
+    @Inject
+    protected WeatherService mApiService;
+
     //--------------------------------------------------
     // Constructor
     //--------------------------------------------------
@@ -60,7 +64,7 @@ public class MainPresenter {
         String message = mActivity.getString(R.string.activity_main__loading_data, mActivity.getCityName());
         Dialog dialog = DialogUtils.showProgressDialog(mActivity, message);
 
-        ReactiveUtils.getWeather(mActivity, cityName, dialog);
+        ReactiveUtils.getWeather(mActivity, mApiService, cityName, dialog);
     }
 
     public void getCityDialog() {
