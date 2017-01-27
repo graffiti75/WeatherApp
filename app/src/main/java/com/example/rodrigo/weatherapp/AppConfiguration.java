@@ -18,7 +18,10 @@ public class AppConfiguration {
 		"Dublin, Ireland",
 		"London, United Kingdom",
 		"New York, United States Of America",
-		"Barcelona, Spain"
+		"Barcelona, Spain",
+		"Curitiba",
+		"Rio",
+		"Ponta Grossa"
 	};
 
 	//----------------------------------------------

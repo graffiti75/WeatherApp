@@ -40,24 +40,15 @@ public class MainActivity extends AppCompatActivity {
 	// Attributes
 	//--------------------------------------------------
 
-	/**
-	 * Context.
-	 */
-
+	// Context.
 	private MainActivity mActivity = MainActivity.this;
 
-	/**
-	 * Adapter.
-	 */
-
+	// Adapter.
 	private List<City> mCityList = new ArrayList<>();
 	private CityAdapter mAdapter;
 	private ActivityMainBinding mBinding;
 
-	/**
-	 * Rest.
-	 */
-
+	// Rest.
 	private String mCityName;
 
 	//--------------------------------------------------
@@ -90,10 +81,8 @@ public class MainActivity extends AppCompatActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.id_menu_add:
-				getCityDialog();
-				break;
+		if (item.getItemId() == R.id.id_menu_add) {
+			getCityDialog();
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -118,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
 			String currentCityName = city.getCity().toLowerCase();
 			if (currentCityName.contains(cityNameLowerCase)) {
 				isInside = true;
+				break;
 			}
 		}
 		return isInside;
@@ -229,25 +219,25 @@ public class MainActivity extends AppCompatActivity {
 
 	public void addCityIntoAdapter(City newCity, Boolean result) {
 		if (result) {
-			mCityList.add(newCity);
-			mAdapter.notifyDataSetChanged();
+			mBinding.idActivityMainRecyclerView.getItemAnimator().setAddDuration(2000);
+			mAdapter.add(mCityList.size(), newCity);
 		} else {
 			Toast.makeText(mActivity, R.string.database_error, Toast.LENGTH_LONG);
 		}
 	}
 
 	public void removeCityFromAdapter(Boolean result, City city) {
-		List<City> list = new ArrayList<>();
+		int position = 0;
 		for (City item: mCityList) {
-			if (city.getId() != item.getId()) {
-				list.add(item);
+			if (city.getId() == item.getId()) {
+				break;
+			} else {
+				position++;
 			}
 		}
 
 		if (result) {
-			mCityList.clear();
-			mCityList.addAll(list);
-			mAdapter.notifyDataSetChanged();
+			mAdapter.remove(position);
 		} else {
 			Toast.makeText(mActivity, R.string.database_error, Toast.LENGTH_LONG);
 		}

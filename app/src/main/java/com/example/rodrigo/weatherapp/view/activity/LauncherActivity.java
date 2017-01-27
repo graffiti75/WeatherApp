@@ -27,10 +27,7 @@ public class LauncherActivity extends AppCompatActivity {
 	// Attributes
 	//--------------------------------------------------
 
-	/**
-	 * Activity.
-	 */
-
+	// Context.
 	private LauncherActivity mActivity = LauncherActivity.this;
 
 	//--------------------------------------------------

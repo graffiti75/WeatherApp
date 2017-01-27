@@ -35,22 +35,13 @@ public class WeatherActivity extends AppCompatActivity {
 	// Attributes
 	//--------------------------------------------------
 
-	/**
-	 * Context.
-	 */
-
+	// Context.
 	private WeatherActivity mActivity = WeatherActivity.this;
 
-	/**
-	 * Rest.
-	 */
-
+	// Rest.
 	private String mCityName;
 
-	/**
-	 * Adapter.
-	 */
-
+	// Adapter.
 	private WeatherDayAdapter mAdapter;
 	private List<Weather> mWeatherList;
 	private ActivityWeatherBinding mBinding;

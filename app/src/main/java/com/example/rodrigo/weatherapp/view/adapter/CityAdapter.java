@@ -63,6 +63,22 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityAdapterVie
 	}
 
 	//--------------------------------------------------
+	// Animation Methods
+	//--------------------------------------------------
+
+	public void add(int position, City city){
+		mItems.add(position, city);
+		notifyItemInserted(position);
+	}
+
+	public void remove(int position){
+		if (position >= mItems.size())
+			return;
+		mItems.remove(position);
+		notifyItemRemoved(position);
+	}
+
+	//--------------------------------------------------
 	// View Holder
 	//--------------------------------------------------
 
