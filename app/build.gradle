@@ -2,15 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion COMPILE_SDK_VERSION as int
+    buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
-        applicationId "com.example.rodrigo.weatherapp"
-        minSdkVersion 21
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        applicationId APPLICATION_ID
+        minSdkVersion MIN_SDK_VERSION as int
+        targetSdkVersion TARGET_SDK_VERSION as int
+        versionCode VERSION_CODE as int
+        versionName VERSION_NAME
     }
 
     dataBinding {
@@ -32,26 +32,26 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    testCompile "junit:junit:${JUNIT_VERSION}"
 
     // Support, Google and Square.
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:design:25.0.0'
-    compile 'com.google.code.gson:gson:1.7.2'
-    compile 'com.squareup.picasso:picasso:2.5.1'
+    compile "com.android.support:appcompat-v7:${SUPPORT_VERSION}"
+    compile "com.android.support:design:${SUPPORT_VERSION}"
+    compile "com.google.code.gson:gson:${GSON_VERSION}"
+    compile "com.squareup.picasso:picasso:${PICASSO_VERSION}"
 
     // Dagger.
-    provided 'javax.annotation:jsr250-api:1.0'
-    compile 'com.google.dagger:dagger:2.7'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.7'
+    provided "javax.annotation:jsr250-api:${JSR_VERSION}"
+    compile "com.google.dagger:dagger:${DAGGER_VERSION}"
+    annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_COMPILER_VERSION}"
 
     // Reactive Programming.
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
+    compile "io.reactivex:rxandroid:${RX_ANDROID_VERSION}"
+    compile "io.reactivex:rxjava:${RX_JAVA_VERSION}"
 
     // Retrofit.
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+    compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+    compile "com.squareup.retrofit2:converter-gson:${CONVERTER_JSON_VERSION}"
+    compile "com.squareup.retrofit2:adapter-rxjava:${ADAPTER_RX_JAVA_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding:${RX_BINDING_VERSION}"
 }
