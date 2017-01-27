@@ -1,4 +1,4 @@
-package com.example.rodrigo.weatherapp.controller.helper;
+package com.example.rodrigo.weatherapp.controller.utils.dialog;
 
 import android.content.Context;
 

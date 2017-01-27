@@ -12,9 +12,9 @@ import android.view.MenuItem;
 
 import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
-import com.example.rodrigo.weatherapp.controller.helper.DialogHelper;
 import com.example.rodrigo.weatherapp.controller.utils.ReactiveUtils;
 import com.example.rodrigo.weatherapp.controller.utils.Utils;
+import com.example.rodrigo.weatherapp.controller.utils.dialog.DialogUtils;
 import com.example.rodrigo.weatherapp.databinding.ActivityWeatherBinding;
 import com.example.rodrigo.weatherapp.model.Weather;
 import com.example.rodrigo.weatherapp.model.WeatherResponse;
@@ -113,21 +113,15 @@ public class WeatherActivity extends AppCompatActivity {
 		if (Utils.checkConnection(mActivity)) {
 			// Shows a loading dialog for the user.
 			String message = getString(R.string.activity_weather__loading_data, mCityName);
-			ProgressDialog dialog = DialogHelper.showProgressDialog(mActivity, message);
+			ProgressDialog dialog = DialogUtils.showProgressDialog(mActivity, message);
 
 			// Calls the API.
 			ReactiveUtils.getWeather(mActivity, mCityName, dialog);
 		} else {
-			showNoConnectionDialog();
+			DialogUtils.showNoConnectionDialog(mActivity);
 		}
 	}
 
-	private void showNoConnectionDialog() {
-		DialogHelper.showSimpleAlert(mActivity, R.string.network_error_dialog_title,
-			R.string.network_error_dialog_message, (dialog, which) -> dialog.cancel()
-		);
-	}
-	
 	//--------------------------------------------------
 	// Callbacks
 	//--------------------------------------------------

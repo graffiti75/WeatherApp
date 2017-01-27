@@ -41,10 +41,10 @@ public class ReactiveUtils {
 	public static void getWeather(AppCompatActivity activity, String cityName, Dialog dialog) {
 		// Retrofit.
 		Retrofit retrofit = new Retrofit.Builder()
-				.baseUrl(AppConfiguration.BASE_URL)
-				.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-				.addConverterFactory(GsonConverterFactory.create())
-				.build();
+			.baseUrl(AppConfiguration.BASE_URL)
+			.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+			.addConverterFactory(GsonConverterFactory.create())
+			.build();
 		WeatherService service = retrofit.create(WeatherService.class);
 
 		// Rx.
@@ -79,7 +79,7 @@ public class ReactiveUtils {
 	}
 
 	//--------------------------------------------------
-	// Remove City
+	// Remove City From Database
 	//--------------------------------------------------
 
 	public static void removeCity(MainActivity activity, City city, Dialog dialog) {
@@ -111,7 +111,7 @@ public class ReactiveUtils {
 	}
 
 	//--------------------------------------------------
-	// Insert City List
+	// Insert City List In Database
 	//--------------------------------------------------
 
 	public static void insertCityList(MainActivity activity, List<City> list, City newCity, Dialog dialog) {
@@ -143,7 +143,7 @@ public class ReactiveUtils {
 	}
 
 	//--------------------------------------------------
-	// Read City List
+	// Read City List From Database
 	//--------------------------------------------------
 
 	public static void getCityList(MainActivity activity, Boolean updateAdapter, Dialog dialog) {
@@ -175,7 +175,7 @@ public class ReactiveUtils {
 	}
 
 	//--------------------------------------------------
-	// Common Methods
+	// Common Database Methods
 	//--------------------------------------------------
 
 	private static <T> Observable<T> makeObservable(MainActivity activity, final Callable<T> func) {

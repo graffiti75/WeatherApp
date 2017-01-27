@@ -24,20 +24,6 @@ public class DatabaseUtils {
     // Low Level Database Methods
     //--------------------------------------------------
 
-    /**
-     * Adds a new City record.
-     */
-    public static Boolean insertCity(Context context, City city) {
-        ContentValues values = getContentValues(city);
-        Uri uri = context.getContentResolver().insert(CityProvider.CONTENT_URI, values);
-
-        Boolean result = false;
-        if (!Utils.isEmpty(uri.toString())) {
-            result = true;
-        }
-        return result;
-    }
-
     public static Boolean insertCityList(Context context, List<City> list) {
         ContentValues values = new ContentValues();
         Uri uri = null;
@@ -110,16 +96,6 @@ public class DatabaseUtils {
         city.setCity(cityName);
 
         return city;
-    }
-
-    private static ContentValues getContentValues(City city) {
-        Integer id = city.getId();
-        String cityName = city.getCity();
-        ContentValues values = new ContentValues();
-        values.put(CityProvider.ID, id);
-        values.put(CityProvider.CITY_NAME, cityName);
-
-        return values;
     }
 
     //--------------------------------------------------

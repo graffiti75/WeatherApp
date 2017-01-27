@@ -18,10 +18,10 @@ import android.widget.Toast;
 
 import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
-import com.example.rodrigo.weatherapp.controller.helper.DialogHelper;
 import com.example.rodrigo.weatherapp.controller.utils.ActivityUtils;
 import com.example.rodrigo.weatherapp.controller.utils.ReactiveUtils;
 import com.example.rodrigo.weatherapp.controller.utils.Utils;
+import com.example.rodrigo.weatherapp.controller.utils.dialog.DialogUtils;
 import com.example.rodrigo.weatherapp.databinding.ActivityMainBinding;
 import com.example.rodrigo.weatherapp.model.City;
 import com.example.rodrigo.weatherapp.view.adapter.CityAdapter;
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
 	public void setAdapter() {
 		String message = getString(R.string.reading_from_database);
-		ProgressDialog dialog = DialogHelper.showProgressDialog(mActivity, message);
+		ProgressDialog dialog = DialogUtils.showProgressDialog(mActivity, message);
 		ReactiveUtils.getCityList(mActivity, false, dialog);
 	}
 	
@@ -139,25 +139,16 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	//--------------------------------------------------
-	// API Methods
+	// Other Methods
 	//--------------------------------------------------
 	
 	public void getCityInfoFromApi(String cityName) {
 		mCityName = cityName;
 		String message = getString(R.string.activity_main__loading_data, mCityName);
-		Dialog dialog = DialogHelper.showProgressDialog(mActivity, message);
+		Dialog dialog = DialogUtils.showProgressDialog(mActivity, message);
 		
 		ReactiveUtils.getWeather(mActivity, cityName, dialog);
 	}
-	
-	public void showNoConnectionDialog() {
-		DialogHelper.showSimpleAlert(mActivity, R.string.network_error_dialog_title,
-			R.string.network_error_dialog_message, (dialog, which) -> dialog.cancel());
-	}
-
-	//--------------------------------------------------
-	// Insert or Remove Methods
-	//--------------------------------------------------
 	
 	private void addCityInDatabase(String cityName) {
 		City lastElement = mCityList.get(mCityList.size() - 1);
@@ -167,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 		list.add(newCity);
 
 		String message = getString(R.string.inserting_in_database);
-		ProgressDialog dialog = DialogHelper.showProgressDialog(mActivity, message);
+		ProgressDialog dialog = DialogUtils.showProgressDialog(mActivity, message);
 		ReactiveUtils.insertCityList(mActivity, list, newCity, dialog);
 	}
 
@@ -175,29 +166,25 @@ public class MainActivity extends AppCompatActivity {
 		City city = mCityList.get(position);
 
 		String message = getString(R.string.removing_from_database);
-		ProgressDialog dialog = DialogHelper.showProgressDialog(mActivity, message);
+		ProgressDialog dialog = DialogUtils.showProgressDialog(mActivity, message);
 		ReactiveUtils.removeCity(mActivity, city, dialog);
 	}
 	
 	private void updateCityAdapter() {
 		mCityList.clear();
 		String message = getString(R.string.reading_from_database);
-		ProgressDialog dialog = DialogHelper.showProgressDialog(mActivity, message);
+		ProgressDialog dialog = DialogUtils.showProgressDialog(mActivity, message);
 		ReactiveUtils.getCityList(mActivity, true, dialog);
 	}
-	
-	//--------------------------------------------------
-	// Other Methods
-	//--------------------------------------------------
 	
 	private void getCityDialog() {
 		if (Utils.checkConnection(mActivity)) {
 			// Gets the city from the dialog.
-			DialogHelper.showCustomDialog(mActivity, R.layout.custom_dialog, R.string.activity_main__city_dialog_title,
+			DialogUtils.showCustomDialog(mActivity, R.layout.custom_dialog, R.string.activity_main__city_dialog_title,
 				(context, city) -> getCityInfoFromApi(city)
 			);
 		} else {
-			showNoConnectionDialog();
+			DialogUtils.showNoConnectionDialog(mActivity);
 		}
 	}
 	
@@ -215,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
 	public void citySearchedExists(String cityName) {
 		Boolean cityRepeated = cityAlreadyInAdapter(cityName);
 		if (cityRepeated) {
-			DialogHelper.showSimpleAlert(mActivity, R.string.activity_main__repeated_city_dialog_title,
+			DialogUtils.showSimpleAlert(mActivity, R.string.activity_main__repeated_city_dialog_title,
 				R.string.activity_main__repeated_city_dialog_message);
 		} else {
 			addCityInDatabase(cityName);
@@ -227,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
 			mCityName = mCityList.get(position).getCity();
 			openWeatherActivity(mCityName);
 		} else {
-			showNoConnectionDialog();
+			DialogUtils.showNoConnectionDialog(mActivity);
 		}
 	}
 

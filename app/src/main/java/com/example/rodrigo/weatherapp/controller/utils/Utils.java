@@ -23,12 +23,6 @@ public class Utils {
 		return result;
 	}
 
-	/**
-	 * Checks if the user is connected. If not, a message will show up to the user.
-	 * 
-	 * @param context
-	 * @return
-	 */
 	public static Boolean checkConnection(Context context) {
 		ConnectivityManager manager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = manager.getActiveNetworkInfo();
