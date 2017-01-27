@@ -10,15 +10,16 @@ import android.widget.Toast;
 
 import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
+import com.example.rodrigo.weatherapp.databinding.ActivityMainBinding;
+import com.example.rodrigo.weatherapp.model.City;
 import com.example.rodrigo.weatherapp.presenter.utils.ActivityUtils;
 import com.example.rodrigo.weatherapp.presenter.utils.ReactiveUtils;
 import com.example.rodrigo.weatherapp.presenter.utils.Utils;
 import com.example.rodrigo.weatherapp.presenter.utils.dialog.DialogUtils;
-import com.example.rodrigo.weatherapp.databinding.ActivityMainBinding;
-import com.example.rodrigo.weatherapp.model.City;
 import com.example.rodrigo.weatherapp.view.activity.MainActivity;
 import com.example.rodrigo.weatherapp.view.activity.WeatherActivity;
 import com.example.rodrigo.weatherapp.view.adapter.CityAdapter;
+import com.example.rodrigo.weatherapp.view.adapter.DividerItemDecoration;
 import com.example.rodrigo.weatherapp.view.listeners.RecyclerTouchListener;
 import com.example.rodrigo.weatherapp.view.listeners.RecyclerViewListeners;
 
@@ -106,6 +107,8 @@ public class MainPresenter {
             binding.idActivityMainRecyclerView.setLayoutManager(layoutManager);
             binding.idActivityMainRecyclerView.setItemAnimator(new DefaultItemAnimator());
             binding.idActivityMainRecyclerView.setAdapter(mActivity.getAdapter());
+            binding.idActivityMainRecyclerView.addItemDecoration(
+                new DividerItemDecoration(mActivity, R.drawable.divider));
         }
         mActivity.setCityList(list);
     }

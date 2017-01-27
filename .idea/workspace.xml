@@ -11,15 +11,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a0da5ab6-4bd8-43ee-afdf-3e4a1529c3b8" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/view/adapter/DividerItemDecoration.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/divider.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/cache.properties.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshots.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshotsToTreeSnapshotsIndex.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshotsToTreeSnapshotsIndex.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/taskArtifacts.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/presenter/utils/dialog/DialogUtils.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/presenter/utils/dialog/DialogUtils.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_dialog.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_dialog.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/presenter/MainPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/presenter/MainPresenter.java" />
     </list>
     <ignored path="WeatherApp.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -67,8 +67,8 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/view/activity/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="318">
-              <caret line="67" column="37" selection-start-line="67" selection-start-column="37" selection-end-line="67" selection-end-column="37" />
+            <state relative-caret-position="168">
+              <caret line="62" column="25" selection-start-line="62" selection-start-column="25" selection-end-line="62" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1734#1774#0" expanded="true" />
@@ -91,7 +91,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DialogUtils.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DialogUtils.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/presenter/utils/dialog/DialogUtils.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="204">
@@ -161,27 +161,27 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainPresenter.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MainPresenter.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/presenter/MainPresenter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="190" column="31" selection-start-line="190" selection-start-column="31" selection-end-line="190" selection-end-column="31" />
+            <state relative-caret-position="222">
+              <caret line="176" column="48" selection-start-line="176" selection-start-column="48" selection-end-line="176" selection-end-column="48" />
               <folding>
-                <element signature="e#1721#1722#0" expanded="true" />
-                <element signature="e#1757#1758#0" expanded="true" />
-                <element signature="e#2017#2099#0" expanded="true" />
-                <element signature="e#2468#2513#0" expanded="true" />
-                <element signature="e#2852#2903#0" expanded="true" />
-                <element signature="e#3253#3303#0" expanded="true" />
-                <element signature="e#3325#3377#0" expanded="true" />
-                <element signature="e#3679#3702#0" expanded="true" />
-                <element signature="e#4766#4789#0" expanded="true" />
-                <element signature="e#5247#5270#0" expanded="true" />
-                <element signature="e#6238#6289#0" expanded="true" />
-                <element signature="e#7288#7289#0" expanded="true" />
-                <element signature="e#7352#7353#0" expanded="true" />
-                <element signature="e#7485#7533#0" expanded="true" />
-                <element signature="e#7812#7864#0" expanded="true" />
+                <element signature="e#1795#1796#0" expanded="true" />
+                <element signature="e#1831#1832#0" expanded="true" />
+                <element signature="e#2091#2173#0" expanded="true" />
+                <element signature="e#2542#2587#0" expanded="true" />
+                <element signature="e#2926#2977#0" expanded="true" />
+                <element signature="e#3327#3377#0" expanded="true" />
+                <element signature="e#3399#3451#0" expanded="true" />
+                <element signature="e#3753#3776#0" expanded="true" />
+                <element signature="e#4981#5004#0" expanded="true" />
+                <element signature="e#5462#5485#0" expanded="true" />
+                <element signature="e#6453#6504#0" expanded="true" />
+                <element signature="e#7503#7504#0" expanded="true" />
+                <element signature="e#7567#7568#0" expanded="true" />
+                <element signature="e#7700#7748#0" expanded="true" />
+                <element signature="e#8027#8079#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -2042,9 +2042,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/model/binding/ImageBinding.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/weather_day_adapter__column.xml" />
-        <option value="$PROJECT_DIR$/app/build/intermediates/data-binding-layout-out/debug/layout/city_adapter.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/city_adapter.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/weather_day_adapter.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/model/City.java" />
@@ -2080,7 +2077,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/model/Weather.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/model/database/CityProvider.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/controller/utils/Utils.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/presenter/MainPresenter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/view/activity/WeatherActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/model/database/DatabaseUtils.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/AppConfiguration.java" />
@@ -2093,6 +2089,10 @@
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/custom_dialog.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/presenter/utils/dialog/DialogUtils.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/view/adapter/VerticalSpaceItemDecoration.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/drawable/divider.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/presenter/MainPresenter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/view/adapter/DividerItemDecoration.java" />
       </list>
     </option>
   </component>
@@ -2184,6 +2184,24 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="drawable" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WeatherApp" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
             </PATH_ELEMENT>
@@ -2225,6 +2243,62 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="view" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="listeners" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WeatherApp" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="weatherapp" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="view" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="adapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WeatherApp" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="weatherapp" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="view" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="activity" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2305,13 +2379,14 @@
       <recent name="com.example.rodrigo.weatherapp.presenter" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.example.rodrigo.weatherapp.view.adapter" />
       <recent name="com.example.rodrigo.weatherapp.presenter" />
       <recent name="com.example.rodrigo.weatherapp.view.activity" />
       <recent name="com.example.rodrigo.weatherapp.controller.di.components" />
       <recent name="com.example.rodrigo.weatherapp.controller.di.module" />
-      <recent name="com.example.rodrigo.weatherapp.controller.di.scope" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
       <recent name="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/controller/di" />
       <recent name="$PROJECT_DIR$/app/src/main/res/anim" />
       <recent name="$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/controller/utils" />
@@ -2682,23 +2757,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/model/api/WeatherService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="16" column="32" selection-start-line="16" selection-start-column="32" selection-end-line="16" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/view/adapter/WeatherDayAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="654">
-          <caret line="53" column="13" selection-start-line="53" selection-start-column="13" selection-end-line="53" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/controller/tasks/AddCityAsyncTask.java" />
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/controller/tasks/RemoveCityAsyncTask.java" />
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/model/api/RetrofitUtils.java" />
@@ -3014,31 +3072,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/view/activity/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="67" column="37" selection-start-line="67" selection-start-column="37" selection-end-line="67" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1734#1774#0" expanded="true" />
-            <element signature="e#2720#2721#0" expanded="true" />
-            <element signature="e#2766#2767#0" expanded="true" />
-            <element signature="e#3176#3177#0" expanded="true" />
-            <element signature="e#3199#3200#0" expanded="true" />
-            <element signature="e#3244#3245#0" expanded="true" />
-            <element signature="e#3271#3272#0" expanded="true" />
-            <element signature="e#3307#3308#0" expanded="true" />
-            <element signature="e#3330#3331#0" expanded="true" />
-            <element signature="e#3375#3376#0" expanded="true" />
-            <element signature="e#3398#3399#0" expanded="true" />
-            <element signature="e#3434#3435#0" expanded="true" />
-            <element signature="e#3456#3457#0" expanded="true" />
-            <element signature="e#3504#3505#0" expanded="true" />
-            <element signature="e#3529#3530#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/presenter/di/components/WeatherComponent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
@@ -3113,30 +3146,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/presenter/MainPresenter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="190" column="31" selection-start-line="190" selection-start-column="31" selection-end-line="190" selection-end-column="31" />
-          <folding>
-            <element signature="e#1721#1722#0" expanded="true" />
-            <element signature="e#1757#1758#0" expanded="true" />
-            <element signature="e#2017#2099#0" expanded="true" />
-            <element signature="e#2468#2513#0" expanded="true" />
-            <element signature="e#2852#2903#0" expanded="true" />
-            <element signature="e#3253#3303#0" expanded="true" />
-            <element signature="e#3325#3377#0" expanded="true" />
-            <element signature="e#3679#3702#0" expanded="true" />
-            <element signature="e#4766#4789#0" expanded="true" />
-            <element signature="e#5247#5270#0" expanded="true" />
-            <element signature="e#6238#6289#0" expanded="true" />
-            <element signature="e#7288#7289#0" expanded="true" />
-            <element signature="e#7352#7353#0" expanded="true" />
-            <element signature="e#7485#7533#0" expanded="true" />
-            <element signature="e#7812#7864#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/custom_dialog.xml">
       <provider editor-type-id="android-designer2">
         <state />
@@ -3154,6 +3163,73 @@
           <caret line="87" column="39" selection-start-line="87" selection-start-column="23" selection-end-line="87" selection-end-column="39" />
           <folding>
             <element signature="e#4143#4165#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/view/activity/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="62" column="25" selection-start-line="62" selection-start-column="25" selection-end-line="62" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1734#1774#0" expanded="true" />
+            <element signature="e#2720#2721#0" expanded="true" />
+            <element signature="e#2766#2767#0" expanded="true" />
+            <element signature="e#3176#3177#0" expanded="true" />
+            <element signature="e#3199#3200#0" expanded="true" />
+            <element signature="e#3244#3245#0" expanded="true" />
+            <element signature="e#3271#3272#0" expanded="true" />
+            <element signature="e#3307#3308#0" expanded="true" />
+            <element signature="e#3330#3331#0" expanded="true" />
+            <element signature="e#3375#3376#0" expanded="true" />
+            <element signature="e#3398#3399#0" expanded="true" />
+            <element signature="e#3434#3435#0" expanded="true" />
+            <element signature="e#3456#3457#0" expanded="true" />
+            <element signature="e#3504#3505#0" expanded="true" />
+            <element signature="e#3529#3530#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/divider.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="31" selection-start-line="3" selection-start-column="31" selection-end-line="3" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/view/adapter/DividerItemDecoration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rodrigo/weatherapp/presenter/MainPresenter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="176" column="48" selection-start-line="176" selection-start-column="48" selection-end-line="176" selection-end-column="48" />
+          <folding>
+            <element signature="e#1795#1796#0" expanded="true" />
+            <element signature="e#1831#1832#0" expanded="true" />
+            <element signature="e#2091#2173#0" expanded="true" />
+            <element signature="e#2542#2587#0" expanded="true" />
+            <element signature="e#2926#2977#0" expanded="true" />
+            <element signature="e#3327#3377#0" expanded="true" />
+            <element signature="e#3399#3451#0" expanded="true" />
+            <element signature="e#3753#3776#0" expanded="true" />
+            <element signature="e#4981#5004#0" expanded="true" />
+            <element signature="e#5462#5485#0" expanded="true" />
+            <element signature="e#6453#6504#0" expanded="true" />
+            <element signature="e#7503#7504#0" expanded="true" />
+            <element signature="e#7567#7568#0" expanded="true" />
+            <element signature="e#7700#7748#0" expanded="true" />
+            <element signature="e#8027#8079#0" expanded="true" />
           </folding>
         </state>
       </provider>
