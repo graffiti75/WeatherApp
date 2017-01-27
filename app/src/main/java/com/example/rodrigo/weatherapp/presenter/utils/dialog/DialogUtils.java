@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface.OnClickListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.example.rodrigo.weatherapp.R;
@@ -93,10 +94,17 @@ public class DialogUtils {
 	    builder.setView(inflator);
 
 		final EditText editText = (EditText)inflator.findViewById(R.id.id_city_adapter__city_edit_text);
+		InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
 	    builder.setTitle(titleResource);
-	    builder.setNegativeButton(R.string.dialog_cancel, null);
+		builder.setNegativeButton(R.string.dialog_cancel, (dialog, which) -> {
+			imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+		});
+
 	    builder.setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
-            String city = editText.getText().toString();
+			imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+			String city = editText.getText().toString();
             callback.onClickCallback(context, city);
         });
 	    
