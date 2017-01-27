@@ -22,7 +22,6 @@ public class City {
 	public City() {}
 	
 	public City(Integer id, String city) {
-		super();
 		this.id = id;
 		this.city = city;
 	}

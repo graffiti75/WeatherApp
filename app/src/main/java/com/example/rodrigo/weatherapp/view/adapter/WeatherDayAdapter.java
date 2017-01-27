@@ -1,14 +1,13 @@
 package com.example.rodrigo.weatherapp.view.adapter;
 
-import android.app.Activity;
 import android.databinding.DataBindingUtil;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import com.example.rodrigo.weatherapp.R;
-import com.example.rodrigo.weatherapp.databinding.WeatherDayAdapterBinding;
+import com.example.rodrigo.weatherapp.databinding.AdapterWeatherDayBinding;
 import com.example.rodrigo.weatherapp.model.Weather;
 
 import java.util.List;
@@ -19,46 +18,57 @@ import java.util.List;
  * @author Rodrigo Cericatto
  * @since Jan 25, 2017
  */
-public class WeatherDayAdapter extends BaseAdapter {
+public class WeatherDayAdapter extends RecyclerView.Adapter<WeatherDayAdapter.WeatherDayViewHolder> {
 
 	//--------------------------------------------------
 	// Attributes
 	//--------------------------------------------------
-	
-	private Activity mActivity;
-	private List<Weather> mWeatherList;
+
+	private List<Weather> mItems;
 
 	//--------------------------------------------------
-	// Adapter
+	// Constructor
 	//--------------------------------------------------
-	
-	public WeatherDayAdapter(Activity activity, List<Weather> weatherList) {
-		mActivity = activity;
-		mWeatherList = weatherList;
+
+	public WeatherDayAdapter(List<Weather> items) {
+		mItems = items;
 	}
-	
-	public int getCount() {
-		return mWeatherList.size();
-	}
-	
-	public Weather getItem(int position) {
-		return mWeatherList.get(position);
-	}
-	
-	public long getItemId(int position) {
-		return position;
+
+	//--------------------------------------------------
+	// Adapter Methods
+	//--------------------------------------------------
+
+	@Override
+	public WeatherDayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		AdapterWeatherDayBinding binding = DataBindingUtil.inflate(
+			LayoutInflater.from(parent.getContext()), R.layout.adapter_weather_day, parent, false);
+		return new WeatherDayViewHolder(binding.getRoot());
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		Weather weather = getItem(position);
-		WeatherDayAdapterBinding binding;
-		if (convertView == null) {
-			binding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.weather_day_adapter, parent, false);
-		} else {
-			binding = DataBindingUtil.bind(convertView);
+	public void onBindViewHolder(WeatherDayViewHolder holder, int position) {
+		Weather item = mItems.get(position);
+		holder.binding.setWeather(item);
+	}
+
+	@Override
+	public int getItemCount() {
+		if (mItems != null && mItems.size() > 0) {
+			return mItems.size();
 		}
-		binding.setWeather(weather);
-		return binding.getRoot();
+		return 0;
+	}
+
+	//--------------------------------------------------
+	// View Holder
+	//--------------------------------------------------
+
+	public class WeatherDayViewHolder extends RecyclerView.ViewHolder {
+		AdapterWeatherDayBinding binding;
+
+		public WeatherDayViewHolder(View rootView) {
+			super(rootView);
+			binding = DataBindingUtil.bind(rootView);
+		}
 	}
 }

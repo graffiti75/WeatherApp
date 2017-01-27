@@ -1,17 +1,20 @@
 package com.example.rodrigo.weatherapp.view.activity;
 
 import android.app.ProgressDialog;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
 import com.example.rodrigo.weatherapp.controller.helper.DialogHelper;
 import com.example.rodrigo.weatherapp.controller.utils.Utils;
+import com.example.rodrigo.weatherapp.databinding.ActivityWeatherBinding;
 import com.example.rodrigo.weatherapp.model.Weather;
 import com.example.rodrigo.weatherapp.model.WeatherResponse;
 import com.example.rodrigo.weatherapp.model.api.RetrofitUtils;
@@ -47,9 +50,9 @@ public class WeatherActivity extends AppCompatActivity {
 	 * Adapter.
 	 */
 
-	private ListView mListView;
 	private WeatherDayAdapter mAdapter;
 	private List<Weather> mWeatherList;
+	private ActivityWeatherBinding mBinding;
 	
 	//--------------------------------------------------
 	// Activity Life Cycle
@@ -58,7 +61,7 @@ public class WeatherActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_weather);
+		mBinding = DataBindingUtil.setContentView(mActivity, R.layout.activity_weather);
 		
 		getExtras();
 		setActionBar();
@@ -107,10 +110,10 @@ public class WeatherActivity extends AppCompatActivity {
 
 	private void refreshList() {
 		// Check if there is Network connection.
-		if (Utils.checkConnection(this)) {
+		if (Utils.checkConnection(mActivity)) {
 			// Shows a loading dialog for the user.
 			String message = getString(R.string.activity_weather__loading_data, mCityName);
-			ProgressDialog dialog = DialogHelper.showProgressDialog(this, message);
+			ProgressDialog dialog = DialogHelper.showProgressDialog(mActivity, message);
 
 			// Calls the API.
 			RetrofitUtils.getWeather(mActivity, mCityName, dialog);
@@ -120,7 +123,7 @@ public class WeatherActivity extends AppCompatActivity {
 	}
 
 	private void showNoConnectionDialog() {
-		DialogHelper.showSimpleAlert(this, R.string.network_error_dialog_title,
+		DialogHelper.showSimpleAlert(mActivity, R.string.network_error_dialog_title,
 				R.string.network_error_dialog_message, (dialog, which) -> dialog.cancel()
 		);
 	}
@@ -131,8 +134,12 @@ public class WeatherActivity extends AppCompatActivity {
 
 	public void setAdapter(WeatherResponse response) {
 		mWeatherList = response.getData().getWeather();
-		mAdapter = new WeatherDayAdapter(this, mWeatherList);
-		mListView = (ListView)findViewById(R.id.id_activity_weather__listview);
-		mListView.setAdapter(mAdapter);
+		mAdapter = new WeatherDayAdapter(mWeatherList);
+
+		LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
+		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+		mBinding.idActivityWeatherRecyclerView.setLayoutManager(layoutManager);
+		mBinding.idActivityWeatherRecyclerView.setItemAnimator(new DefaultItemAnimator());
+		mBinding.idActivityWeatherRecyclerView.setAdapter(mAdapter);
 	}
 }

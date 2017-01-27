@@ -6,13 +6,9 @@
         android:background="@color/color_black"
         android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/id_activity_main__list_view"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/id_activity_main__recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:divider="@color/color_white"
-            android:dividerHeight="1dp"
-            android:scrollbarStyle="outsideInset" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 </layout>

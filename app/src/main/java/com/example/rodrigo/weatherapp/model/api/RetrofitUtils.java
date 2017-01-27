@@ -2,7 +2,6 @@ package com.example.rodrigo.weatherapp.model.api;
 
 import android.app.Dialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.rodrigo.weatherapp.AppConfiguration;
