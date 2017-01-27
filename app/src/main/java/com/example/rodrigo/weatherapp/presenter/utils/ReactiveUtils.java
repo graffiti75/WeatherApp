@@ -51,8 +51,7 @@ public class ReactiveUtils {
 		Observable<WeatherResponse> observable = service.getWeather(cityName, AppConfiguration.FORMAT,
 				AppConfiguration.NUMBER_OF_DAYS, AppConfiguration.KEY);
 		observable
-			.subscribeOn(Schedulers.newThread())
-			.observeOn(AndroidSchedulers.mainThread())
+			.compose(setupSchedulers())
 			.subscribe(
 				(response) -> setWeatherResponseInActivity(activity, response, cityName),
 				(error) -> {
@@ -85,8 +84,7 @@ public class ReactiveUtils {
 	public static void removeCity(MainActivity activity, City city, Dialog dialog) {
 		Observable<Boolean> observable = makeObservable(activity, removeCityFromDatabase(activity, city));
 		observable
-			.subscribeOn(Schedulers.newThread())
-			.observeOn(AndroidSchedulers.mainThread())
+			.compose(setupSchedulers())
 			.subscribe(
 				(success) -> {
 					activity.removeCityFromAdapter(success, city);
@@ -117,8 +115,7 @@ public class ReactiveUtils {
 	public static void insertCityList(MainActivity activity, List<City> list, City newCity, Dialog dialog) {
 		Observable<Boolean> observable = makeObservable(activity, insertCityListInDatabase(activity, list));
 		observable
-			.subscribeOn(Schedulers.newThread())
-			.observeOn(AndroidSchedulers.mainThread())
+			.compose(setupSchedulers())
 			.subscribe(
 				(success) -> {
 					activity.addCityIntoAdapter(newCity, success);
@@ -149,8 +146,7 @@ public class ReactiveUtils {
 	public static void getCityList(MainActivity activity, Boolean updateAdapter, Dialog dialog) {
 		Observable<List<City>> observable = makeObservable(activity, getCityListFromDatabase(activity));
 		observable
-			.subscribeOn(Schedulers.newThread())
-			.observeOn(AndroidSchedulers.mainThread())
+			.compose(setupSchedulers())
 			.subscribe(
 				(list) -> {
 					activity.changeAdapter(list, updateAdapter);
@@ -189,5 +185,11 @@ public class ReactiveUtils {
 				}
 			}
 		});
+	}
+
+	private static <T> Observable.Transformer<T, T> setupSchedulers() {
+		return observable -> observable
+			.subscribeOn(Schedulers.newThread())
+			.observeOn(AndroidSchedulers.mainThread());
 	}
 }
