@@ -1,39 +1,46 @@
 package com.example.rodrigo.weatherapp.controller.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 /**
- * ActivityUtils class.
- * 
+ * ActivityUtils.java.
+ *
  * @author Rodrigo Cericatto
- * @since Jan 25, 2017
+ * @since Jan 27, 2016
  */
 public class ActivityUtils {
-	
-	/**
-	 * Opens the specified activity.
-	 * 
-	 * @param context The context that will start the activity.
-	 * @param activityClass The activity class to be started.
-	 * @param extras A bundle containing any extras to be sent to the activity.
-	 */
-	public static void openActivity(Context context, final Class<? extends Activity> activityClass, final Bundle extras) {
-		Intent intent = new Intent(context, activityClass);
-		if (extras != null) intent.putExtras(extras);
-		context.startActivity(intent);
-	}
 
-	/**
-	 * Opens the specified activity.
-	 * 
-	 * @param context The context that will start the activity.
-	 * @param activityClass The activity class to be started.
-	 */
-	public static void openActivityForResult(Context context, final Class<? extends Activity> activityClass) {
-		Intent intent = new Intent(context, activityClass);
-		((Activity)context).startActivityForResult(intent, 1);
-	}
+    //--------------------------------------------------
+    // Activity Methods
+    //--------------------------------------------------
+
+    public static void startActivity(Activity activity, Class clazz) {
+        Intent intent = new Intent(activity, clazz);
+        activity.startActivity(intent);
+        Navigation.animate(activity, Navigation.Animation.GO);
+    }
+
+    public static void startActivityExtras(Activity activity, Class clazz, String key, Object value) {
+        Intent intent = new Intent(activity, clazz);
+        Bundle extras = getExtra(new Bundle(), key, value);
+        intent.putExtras(extras);
+
+        activity.startActivity(intent);
+        Navigation.animate(activity, Navigation.Animation.GO);
+    }
+
+    private static Bundle getExtra(Bundle extras, String key, Object value) {
+        if (value instanceof String) {
+            extras.putString(key, (String)value);
+        } else if (value instanceof Integer) {
+            extras.putInt(key, (Integer)value);
+        } else if (value instanceof Long) {
+            extras.putLong(key, (Long)value);
+        } else if (value instanceof Boolean) {
+            extras.putBoolean(key, (Boolean) value);
+        }
+        return extras;
+    }
 }

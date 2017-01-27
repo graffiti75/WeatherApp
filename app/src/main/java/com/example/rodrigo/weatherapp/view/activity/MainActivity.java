@@ -69,7 +69,13 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		mBinding = DataBindingUtil.setContentView(mActivity, R.layout.activity_main);
 
+		Utils.initToolbar(mActivity, false, R.string.activity_main__title);
 		setAdapter();
+	}
+
+	@Override
+	public void onBackPressed() {
+		moveTaskToBack(true);
 	}
 	
 	//--------------------------------------------------
@@ -96,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 	// Methods
 	//--------------------------------------------------
 
-	public void setAdapter() {
+	private void setAdapter() {
 		mBinding.idActivityMainRecyclerView.addOnItemTouchListener(setRecyclerViewListener());
 
 		String message = getString(R.string.reading_from_database);
@@ -104,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 		ReactiveUtils.getCityList(mActivity, false, dialog);
 	}
 	
-	public Boolean cityAlreadyInAdapter(String cityName) {
+	private Boolean cityAlreadyInAdapter(String cityName) {
 		Boolean isInside = false;
 		String cityNameLowerCase = cityName.toLowerCase();
 		
@@ -117,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 		return isInside;
 	}
 
-	public void getCityInfoFromApi(String cityName) {
+	private void getCityInfoFromApi(String cityName) {
 		mCityName = cityName;
 		String message = getString(R.string.activity_main__loading_data, mCityName);
 		Dialog dialog = DialogUtils.showProgressDialog(mActivity, message);
@@ -156,13 +162,6 @@ public class MainActivity extends AppCompatActivity {
 		return (context, which) -> context.dismiss();
 	}
 	
-	private void updateCityAdapter() {
-		mCityList.clear();
-		String message = getString(R.string.reading_from_database);
-		ProgressDialog dialog = DialogUtils.showProgressDialog(mActivity, message);
-		ReactiveUtils.getCityList(mActivity, true, dialog);
-	}
-	
 	private void getCityDialog() {
 		if (Utils.checkConnection(mActivity)) {
 			// Gets the city from the dialog.
@@ -174,13 +173,6 @@ public class MainActivity extends AppCompatActivity {
 		}
 	}
 	
-	private void openWeatherActivity(String cityName) {
-		Bundle extras = new Bundle();
-		extras.putString(AppConfiguration.CITY_NAME_EXTRA, cityName);
-		ActivityUtils.openActivity(mActivity, WeatherActivity.class, extras);
-		overridePendingTransition(R.anim.slide_up_from_outside, R.anim.slide_up_to_outside);
-	}
-
 	private RecyclerTouchListener setRecyclerViewListener() {
 		return new RecyclerTouchListener(mActivity, mBinding.idActivityMainRecyclerView,
 			new RecyclerViewListeners() {
@@ -188,7 +180,8 @@ public class MainActivity extends AppCompatActivity {
 			public void onClick(View view, final int position) {
 				if (Utils.checkConnection(mActivity)) {
 					mCityName = mCityList.get(position).getCity();
-					openWeatherActivity(mCityName);
+					ActivityUtils.startActivityExtras(mActivity, WeatherActivity.class,
+						AppConfiguration.CITY_NAME_EXTRA, mCityName);
 				} else {
 					DialogUtils.showNoConnectionDialog(mActivity);
 				}
@@ -202,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	//--------------------------------------------------
-	// Callback
+	// Callbacks
 	//--------------------------------------------------
 
 	public void citySearchedExists(String cityName) {
@@ -238,12 +231,23 @@ public class MainActivity extends AppCompatActivity {
 		if (result) {
 			mCityList.add(newCity);
 			mAdapter.notifyDataSetChanged();
+		} else {
+			Toast.makeText(mActivity, R.string.database_error, Toast.LENGTH_LONG);
 		}
 	}
 
-	public void removeCityFromAdapter(Boolean result) {
+	public void removeCityFromAdapter(Boolean result, City city) {
+		List<City> list = new ArrayList<>();
+		for (City item: mCityList) {
+			if (city.getId() != item.getId()) {
+				list.add(item);
+			}
+		}
+
 		if (result) {
-			updateCityAdapter();
+			mCityList.clear();
+			mCityList.addAll(list);
+			mAdapter.notifyDataSetChanged();
 		} else {
 			Toast.makeText(mActivity, R.string.database_error, Toast.LENGTH_LONG);
 		}

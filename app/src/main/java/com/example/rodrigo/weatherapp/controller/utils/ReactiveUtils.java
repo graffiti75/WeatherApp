@@ -85,11 +85,11 @@ public class ReactiveUtils {
 	public static void removeCity(MainActivity activity, City city, Dialog dialog) {
 		Observable<Boolean> observable = makeObservable(activity, removeCityFromDatabase(activity, city));
 		observable
-			.subscribeOn(Schedulers.computation())
+			.subscribeOn(Schedulers.newThread())
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(
 				(success) -> {
-					activity.removeCityFromAdapter(success);
+					activity.removeCityFromAdapter(success, city);
 					dialog.dismiss();
 				},
 				(error) -> {
@@ -117,7 +117,7 @@ public class ReactiveUtils {
 	public static void insertCityList(MainActivity activity, List<City> list, City newCity, Dialog dialog) {
 		Observable<Boolean> observable = makeObservable(activity, insertCityListInDatabase(activity, list));
 		observable
-			.subscribeOn(Schedulers.computation())
+			.subscribeOn(Schedulers.newThread())
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(
 				(success) -> {
@@ -149,7 +149,7 @@ public class ReactiveUtils {
 	public static void getCityList(MainActivity activity, Boolean updateAdapter, Dialog dialog) {
 		Observable<List<City>> observable = makeObservable(activity, getCityListFromDatabase(activity));
 		observable
-			.subscribeOn(Schedulers.computation())
+			.subscribeOn(Schedulers.newThread())
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(
 				(list) -> {

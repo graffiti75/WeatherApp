@@ -2,10 +2,12 @@
 <resources>
 	<!-- Application -->
 
-    <string name="app_name">Arena</string>
+    <string name="app_name">Arena Weather</string>
     <string name="content_authority">com.example.rodrigo.weatherapp.model.database.CityProvider</string>
 
     <!-- Main Activity -->
+
+    <string name="activity_main__title">Weather App</string>
 
     <string name="activity_main__other_city_button">Other City</string>
     <string name="activity_main__loading_data">Loading data from %1$s&#8230;</string>
@@ -33,7 +35,7 @@
     <string name="removing_from_database">Removing data from database&#8230;</string>
     <string name="inserting_in_database">Inserting data in database&#8230;</string>
     <string name="reading_from_database">Loading data from database&#8230;</string>
-    <string name="database_error">Error reading from database.</string>
+    <string name="database_error">Error occurred in database.</string>
 
     <string name="fetch_city_error">Error loading city \"%1$s\".</string>
     <string name="network_error_dialog_title">Error</string>

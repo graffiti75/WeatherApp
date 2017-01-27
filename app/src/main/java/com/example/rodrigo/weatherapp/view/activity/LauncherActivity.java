@@ -1,12 +1,13 @@
 package com.example.rodrigo.weatherapp.view.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
 import com.example.rodrigo.weatherapp.controller.utils.ActivityUtils;
+import com.example.rodrigo.weatherapp.controller.utils.Utils;
 import com.example.rodrigo.weatherapp.model.City;
 import com.example.rodrigo.weatherapp.model.database.CityProvider;
 import com.example.rodrigo.weatherapp.model.database.DatabaseUtils;
@@ -20,7 +21,7 @@ import java.util.List;
  * @author Rodrigo Cericatto
  * @since Jan 25, 2017
  */
-public class LauncherActivity extends Activity {
+public class LauncherActivity extends AppCompatActivity {
 
 	//--------------------------------------------------
 	// Attributes
@@ -41,7 +42,13 @@ public class LauncherActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_launcher);
 
+		Utils.initToolbar(mActivity, false, 0);
 		getDatabaseInfo();
+	}
+
+	@Override
+	public void onBackPressed() {
+		moveTaskToBack(true);
 	}
 
 	//--------------------------------------------------
@@ -50,7 +57,7 @@ public class LauncherActivity extends Activity {
 
 	private void getDatabaseInfo() {
 		getCityListFromDatabase();
-		ActivityUtils.openActivityForResult(this, MainActivity.class);
+		ActivityUtils.startActivity(mActivity, MainActivity.class);
     }
 
 	private void getCityListFromDatabase() {

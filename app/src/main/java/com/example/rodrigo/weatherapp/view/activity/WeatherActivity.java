@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
+import com.example.rodrigo.weatherapp.controller.utils.Navigation;
 import com.example.rodrigo.weatherapp.controller.utils.ReactiveUtils;
 import com.example.rodrigo.weatherapp.controller.utils.Utils;
 import com.example.rodrigo.weatherapp.controller.utils.dialog.DialogUtils;
@@ -62,12 +63,18 @@ public class WeatherActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mBinding = DataBindingUtil.setContentView(mActivity, R.layout.activity_weather);
-		
+
 		getExtras();
 		setActionBar();
 		refreshList();
 	}
-	
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		Navigation.animate(mActivity, Navigation.Animation.BACK);
+	}
+
 	//--------------------------------------------------
 	// Menu
 	//--------------------------------------------------
@@ -92,13 +99,14 @@ public class WeatherActivity extends AppCompatActivity {
 	}
 	
 	//--------------------------------------------------
-	// Other Methods
+	// Methods
 	//--------------------------------------------------
 
 	private void getExtras() {
 		Bundle extras = getIntent().getExtras(); 
 		if (extras != null) {
 			mCityName = extras.getString(AppConfiguration.CITY_NAME_EXTRA);
+			Utils.initToolbar(mActivity, true, mCityName);
 		}
 	}
 

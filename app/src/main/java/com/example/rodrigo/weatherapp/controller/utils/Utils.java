@@ -3,6 +3,10 @@ package com.example.rodrigo.weatherapp.controller.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+
+import com.example.rodrigo.weatherapp.R;
 
 /**
  * Utils.java.
@@ -30,5 +34,23 @@ public class Utils {
 			return true;
 		}
 		return false; 
+	}
+
+	public static void initToolbar(AppCompatActivity activity, Boolean homeEnabled, int stringId) {
+		Toolbar toolbar = (Toolbar)activity.findViewById(R.id.id_toolbar);
+		if (toolbar != null) {
+			activity.setSupportActionBar(toolbar);
+			activity.getSupportActionBar().setDisplayHomeAsUpEnabled(homeEnabled);
+			activity.getSupportActionBar().setTitle(stringId);
+		}
+	}
+
+	public static void initToolbar(AppCompatActivity activity, Boolean homeEnabled, String string) {
+		Toolbar toolbar = (Toolbar)activity.findViewById(R.id.id_toolbar);
+		if (toolbar != null) {
+			activity.setSupportActionBar(toolbar);
+			activity.getSupportActionBar().setDisplayHomeAsUpEnabled(homeEnabled);
+			activity.getSupportActionBar().setTitle(string);
+		}
 	}
 }

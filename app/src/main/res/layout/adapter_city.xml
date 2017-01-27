@@ -14,6 +14,6 @@
         android:paddingBottom="15dp"
         android:paddingLeft="15dp"
         android:paddingTop="15dp"
-        android:textColor="@color/color_white"
+        android:textColor="@color/grey_800"
         android:textSize="22dp" />
 </layout>
