@@ -7,11 +7,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.rodrigo.weatherapp.R;
-import com.example.rodrigo.weatherapp.presenter.di.components.DaggerMainComponent;
-import com.example.rodrigo.weatherapp.presenter.di.module.MainModule;
 import com.example.rodrigo.weatherapp.databinding.ActivityMainBinding;
 import com.example.rodrigo.weatherapp.model.City;
 import com.example.rodrigo.weatherapp.presenter.MainPresenter;
+import com.example.rodrigo.weatherapp.presenter.di.components.DaggerMainComponent;
+import com.example.rodrigo.weatherapp.presenter.di.module.MainModule;
 import com.example.rodrigo.weatherapp.view.adapter.CityAdapter;
 
 import java.util.ArrayList;

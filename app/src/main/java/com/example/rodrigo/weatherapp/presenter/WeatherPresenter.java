@@ -7,12 +7,12 @@ import android.support.v7.widget.LinearLayoutManager;
 
 import com.example.rodrigo.weatherapp.AppConfiguration;
 import com.example.rodrigo.weatherapp.R;
+import com.example.rodrigo.weatherapp.databinding.ActivityWeatherBinding;
+import com.example.rodrigo.weatherapp.model.WeatherResponse;
 import com.example.rodrigo.weatherapp.model.api.WeatherService;
 import com.example.rodrigo.weatherapp.presenter.utils.ReactiveUtils;
 import com.example.rodrigo.weatherapp.presenter.utils.Utils;
 import com.example.rodrigo.weatherapp.presenter.utils.dialog.DialogUtils;
-import com.example.rodrigo.weatherapp.databinding.ActivityWeatherBinding;
-import com.example.rodrigo.weatherapp.model.WeatherResponse;
 import com.example.rodrigo.weatherapp.view.activity.WeatherActivity;
 import com.example.rodrigo.weatherapp.view.adapter.WeatherDayAdapter;
 

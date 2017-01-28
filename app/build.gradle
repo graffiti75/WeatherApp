@@ -11,6 +11,7 @@ android {
         targetSdkVersion TARGET_SDK_VERSION as int
         versionCode VERSION_CODE as int
         versionName VERSION_NAME
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     dataBinding {
@@ -32,7 +33,21 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Tests.
     testCompile "junit:junit:${JUNIT_VERSION}"
+    androidTestCompile ('com.android.support.test:runner:0.5') {
+        exclude module: 'support-annotations'
+    }
+    androidTestCompile ('com.android.support.test:rules:0.5') {
+        exclude module: 'support-annotations'
+    }
+    androidTestCompile ('com.android.support.test.espresso:espresso-core:2.2.2') {
+        exclude module: 'support-annotations'
+    }
+    androidTestCompile ('com.android.support.test.espresso:espresso-idling-resource:2.2.2') {
+        exclude module: 'support-annotations'
+    }
 
     // Support, Google and Square.
     compile "com.android.support:appcompat-v7:${SUPPORT_VERSION}"

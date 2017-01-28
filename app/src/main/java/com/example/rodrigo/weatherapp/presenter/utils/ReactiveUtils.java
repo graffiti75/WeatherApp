@@ -1,5 +1,6 @@
 package com.example.rodrigo.weatherapp.presenter.utils;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,8 +13,13 @@ import com.example.rodrigo.weatherapp.model.WeatherResponse;
 import com.example.rodrigo.weatherapp.model.api.WeatherService;
 import com.example.rodrigo.weatherapp.model.database.CityProvider;
 import com.example.rodrigo.weatherapp.model.database.DatabaseUtils;
+import com.example.rodrigo.weatherapp.view.activity.LauncherActivity;
 import com.example.rodrigo.weatherapp.view.activity.MainActivity;
 import com.example.rodrigo.weatherapp.view.activity.WeatherActivity;
+import com.example.rodrigo.weatherapp.view.activity.test.TestDatabaseActivity;
+import com.example.rodrigo.weatherapp.view.activity.test.TestMainActivity;
+import com.example.rodrigo.weatherapp.view.fragment.LoadingDialogApiFragment;
+import com.example.rodrigo.weatherapp.view.fragment.LoadingDialogDatabaseFragment;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -43,9 +49,9 @@ public class ReactiveUtils {
 			.subscribe(
 				(response) -> setWeatherResponseInActivity(activity, response, cityName),
 				(error) -> {
+					dialog.dismiss();
 					String message = activity.getString(R.string.fetch_city_error, cityName);
 					Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
-					dialog.dismiss();
 				},
 				() -> dialog.dismiss()
 			);
@@ -75,19 +81,19 @@ public class ReactiveUtils {
 			.compose(setupSchedulers())
 			.subscribe(
 				(success) -> {
-					activity.removeCityFromAdapter(success, city);
 					dialog.dismiss();
+					activity.removeCityFromAdapter(success, city);
 				},
 				(error) -> {
+					dialog.dismiss();
 					String message = activity.getString(R.string.database_error);
 					Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
-					dialog.dismiss();
 				},
 				() -> dialog.dismiss()
 			);
 	}
 
-	private static Callable<Boolean> removeCityFromDatabase(MainActivity activity, City city) {
+	public static Callable<Boolean> removeCityFromDatabase(Activity activity, City city) {
 		return () -> {
 			CityProvider database = DatabaseUtils.openDatabase(activity);
 			Boolean success = DatabaseUtils.deleteCity(activity, city.getId());
@@ -100,25 +106,43 @@ public class ReactiveUtils {
 	// Insert City List In Database
 	//--------------------------------------------------
 
+	public static void insertCityList(LauncherActivity activity, List<City> list, Dialog dialog) {
+		Observable<Boolean> observable = makeObservable(activity, insertCityListInDatabase(activity, list));
+		observable
+			.compose(setupSchedulers())
+			.subscribe(
+				(success) -> {
+					dialog.dismiss();
+					activity.callMainActivity(success);
+				},
+				(error) -> {
+					dialog.dismiss();
+					String message = activity.getString(R.string.database_error);
+					Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+				},
+				() -> dialog.dismiss()
+			);
+	}
+
 	public static void insertCityList(MainActivity activity, List<City> list, City newCity, Dialog dialog) {
 		Observable<Boolean> observable = makeObservable(activity, insertCityListInDatabase(activity, list));
 		observable
 			.compose(setupSchedulers())
 			.subscribe(
 				(success) -> {
-					activity.addCityIntoAdapter(newCity, success);
 					dialog.dismiss();
+					activity.addCityIntoAdapter(newCity, success);
 				},
 				(error) -> {
+					dialog.dismiss();
 					String message = activity.getString(R.string.database_error);
 					Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
-					dialog.dismiss();
 				},
 				() -> dialog.dismiss()
 			);
 	}
 
-	private static Callable<Boolean> insertCityListInDatabase(MainActivity activity, List<City> list) {
+	private static Callable<Boolean> insertCityListInDatabase(Activity activity, List<City> list) {
 		return () -> {
 			CityProvider database = DatabaseUtils.openDatabase(activity);
 			Boolean success = DatabaseUtils.insertCityList(activity, list);
@@ -137,13 +161,13 @@ public class ReactiveUtils {
 			.compose(setupSchedulers())
 			.subscribe(
 				(list) -> {
-					activity.changeAdapter(list, updateAdapter);
 					dialog.dismiss();
+					activity.changeAdapter(list, updateAdapter);
 				},
 				(error) -> {
+					dialog.dismiss();
 					String message = activity.getString(R.string.database_error);
 					Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
-					dialog.dismiss();
 				},
 				() -> dialog.dismiss()
 			);
@@ -162,7 +186,7 @@ public class ReactiveUtils {
 	// Common Database Methods
 	//--------------------------------------------------
 
-	private static <T> Observable<T> makeObservable(MainActivity activity, final Callable<T> func) {
+	public static <T> Observable<T> makeObservable(Activity activity, final Callable<T> func) {
 		return Observable.create(new Observable.OnSubscribe<T>() {
 			@Override
 			public void call(Subscriber<? super T> subscriber) {
@@ -175,9 +199,52 @@ public class ReactiveUtils {
 		});
 	}
 
-	private static <T> Observable.Transformer<T, T> setupSchedulers() {
+	public static <T> Observable.Transformer<T, T> setupSchedulers() {
 		return observable -> observable
 			.subscribeOn(Schedulers.newThread())
 			.observeOn(AndroidSchedulers.mainThread());
+	}
+
+	//--------------------------------------------------
+	// Tests
+	//--------------------------------------------------
+
+	public static void insertCityList(TestDatabaseActivity activity, List<City> list,
+		LoadingDialogDatabaseFragment fragment) {
+		Observable<Boolean> observable = makeObservable(activity, insertCityListInDatabase(activity, list));
+		observable
+			.compose(setupSchedulers())
+			.subscribe(
+				(success) -> {
+					fragment.dismiss();
+					activity.onLoadingFinished();
+				},
+				(error) -> {
+					fragment.dismiss();
+					String message = activity.getString(R.string.database_error);
+					Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+				},
+				() -> fragment.dismiss()
+			);
+	}
+
+	public static void getWeather(TestMainActivity activity, WeatherService apiService,
+		String cityName, LoadingDialogApiFragment fragment) {
+		Observable<WeatherResponse> observable = apiService.getWeather(cityName, AppConfiguration.FORMAT,
+			AppConfiguration.NUMBER_OF_DAYS, AppConfiguration.KEY);
+		observable
+			.compose(setupSchedulers())
+			.subscribe(
+				(response) -> {
+					fragment.dismiss();
+					activity.onLoadingFinished();
+				},
+				(error) -> {
+					fragment.dismiss();
+					String message = activity.getString(R.string.fetch_city_error, cityName);
+					Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+				},
+				() -> fragment.dismiss()
+			);
 	}
 }
