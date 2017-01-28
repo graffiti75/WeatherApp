@@ -11,6 +11,6 @@
 <li>Animations in RecyclerView and Activity Transitions</li>
 <li>Database implemented via Content Provider</li>
 <li>Unit Tests implemented with Espresso, JUnit and IdlingResource<br>
-  <b>OBS.:</b> TestDatabaseActivityTest must be run <b>ONLY WHEN</b> app Database is null</li>
+  <b>OBS.:</b> `TestDatabaseActivityTest` must be tested <b>ONLY WHEN</b> app Database is null</li>
 <li>Signed APK</li>
 </ul>
