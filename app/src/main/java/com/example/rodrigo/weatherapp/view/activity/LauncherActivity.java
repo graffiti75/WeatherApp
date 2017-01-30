@@ -45,7 +45,10 @@ public class LauncherActivity extends BaseActivity {
 		setContentView(getContentView());
 
 		showBackArrow(mActivity, false, "");
-		getCityListFromDatabase();
+
+		String message = getString(R.string.inserting_in_database);
+		ProgressDialog dialog = DialogUtils.showProgressDialog(mActivity, message);
+		ReactiveUtils.getCityList(mActivity, false, dialog);
 	}
 
 	@Override
@@ -58,10 +61,10 @@ public class LauncherActivity extends BaseActivity {
 	}
 
 	//--------------------------------------------------
-	// Methods
+	// Callbacks
 	//--------------------------------------------------
 
-	private void getCityListFromDatabase() {
+	public void getCityListFromDatabase() {
 		List<City> list = new ArrayList<>();
 		for (int i = 0; i < AppConfiguration.DEFAULT_DATA.length; i++) {
 			list.add(new City(i + 1, AppConfiguration.DEFAULT_DATA[i]));
@@ -69,11 +72,7 @@ public class LauncherActivity extends BaseActivity {
 		String message = getString(R.string.inserting_in_database);
 		ProgressDialog dialog = DialogUtils.showProgressDialog(mActivity, message);
 		ReactiveUtils.insertCityList(mActivity, list, dialog);
-    }
-
-	//--------------------------------------------------
-	// Callbacks
-	//--------------------------------------------------
+	}
 
 	public void callMainActivity(Boolean success) {
 		if (success) {

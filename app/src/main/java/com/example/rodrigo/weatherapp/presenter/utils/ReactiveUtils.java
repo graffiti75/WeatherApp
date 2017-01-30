@@ -155,14 +155,24 @@ public class ReactiveUtils {
 	// Read City List From Database
 	//--------------------------------------------------
 
-	public static void getCityList(MainActivity activity, Boolean updateAdapter, Dialog dialog) {
+	public static void getCityList(Activity activity, Boolean updateAdapter, Dialog dialog) {
 		Observable<List<City>> observable = makeObservable(activity, getCityListFromDatabase(activity));
 		observable
 			.compose(setupSchedulers())
 			.subscribe(
 				(list) -> {
 					dialog.dismiss();
-					activity.changeAdapter(list, updateAdapter);
+					if (activity instanceof MainActivity) {
+						MainActivity mainActivity = (MainActivity)activity;
+						mainActivity.changeAdapter(list, updateAdapter);
+					} else if (activity instanceof LauncherActivity) {
+						LauncherActivity launcherActivity = (LauncherActivity)activity;
+						if (list != null && list.size() > 0) {
+							launcherActivity.callMainActivity(true);
+						} else {
+							launcherActivity.getCityListFromDatabase();
+						}
+					}
 				},
 				(error) -> {
 					dialog.dismiss();
@@ -173,7 +183,7 @@ public class ReactiveUtils {
 			);
 	}
 
-	private static Callable<List<City>> getCityListFromDatabase(MainActivity activity) {
+	private static Callable<List<City>> getCityListFromDatabase(Activity activity) {
 		return () -> {
 			CityProvider database = DatabaseUtils.openDatabase(activity);
 			List<City> list = DatabaseUtils.getCityList(activity);
